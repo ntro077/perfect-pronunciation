@@ -239,6 +239,15 @@
             color: #2c7da0;
         }
 
+        .btn-success {
+            background: #27ae60;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #229954;
+        }
+
         .feedback {
             background: #eef2f7;
             border-radius: 1.5rem;
@@ -259,6 +268,38 @@
             background: #f8fafd;
             border-radius: 1.5rem;
             padding: 1.5rem;
+            transition: all 0.3s ease;
+            scroll-margin-top: 80px;
+        }
+
+        .custom-section.highlight {
+            box-shadow: 0 0 0 3px #2c7da0, 0 0 0 6px rgba(44,125,160,0.2);
+            transition: box-shadow 0.3s ease;
+        }
+
+        .custom-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 1.2rem;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+
+        .custom-header h3 {
+            font-weight: 600;
+            color: #1e4660;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .custom-badge-info {
+            background: #e8f0fe;
+            padding: 0.3rem 0.8rem;
+            border-radius: 40px;
+            font-size: 0.8rem;
+            color: #2c7da0;
         }
 
         .input-group {
@@ -319,6 +360,14 @@
             gap: 6px;
         }
 
+        .word-count {
+            font-size: 0.75rem;
+            background: #eef2f7;
+            padding: 2px 8px;
+            border-radius: 20px;
+            margin-left: 8px;
+        }
+
         @keyframes gentlePop {
             0% { transform: scale(0.96); opacity: 0.7; }
             100% { transform: scale(1); opacity: 1; }
@@ -329,6 +378,11 @@
             50% { opacity: 0.5; }
         }
 
+        @keyframes highlightFlash {
+            0% { background-color: rgba(44,125,160,0.1); }
+            100% { background-color: transparent; }
+        }
+
         .animate-word {
             animation: gentlePop 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
         }
@@ -336,6 +390,10 @@
         .mic-listening {
             animation: pulse 1s infinite;
             background: #e67e22 !important;
+        }
+
+        .flash-highlight {
+            animation: highlightFlash 1s ease-out;
         }
 
         @media (max-width: 650px) {
@@ -398,22 +456,29 @@
         </div>
 
         <div id="customPanel" style="display: none;">
-            <div class="custom-section">
-                <h3 style="margin-bottom: 1rem; font-weight: 600;"><i class="fas fa-edit"></i> Your personal word bank</h3>
-                <div class="input-group">
-                    <input type="text" id="singleWordInput" placeholder="Add a word (e.g., 'beautiful')">
-                    <button class="btn" id="addWordBtn" style="background:#e2eaf1;">➕ Add Word</button>
+            <div class="custom-section" id="customSection">
+                <div class="custom-header">
+                    <h3><i class="fas fa-edit"></i> Your Personal Word Bank</h3>
+                    <div class="custom-badge-info">
+                        <i class="fas fa-info-circle"></i> Add words you want to practice
+                    </div>
                 </div>
                 <div class="input-group">
-                    <textarea id="bulkWords" rows="2" placeholder="Or paste multiple words / short phrases, separated by commas or lines&#10;Example: rendezvous, entrepreneur, schedule, I am determined"></textarea>
-                    <button class="btn" id="importListBtn" style="background:#e2eaf1;">📋 Import & Set List</button>
+                    <input type="text" id="singleWordInput" placeholder="Add a word or phrase (e.g., 'beautiful' or 'I love learning')">
+                    <button class="btn btn-success" id="addWordBtn"><i class="fas fa-plus-circle"></i> Add Word</button>
                 </div>
                 <div class="input-group">
-                    <button class="btn btn-primary" id="startCustomPracticeBtn"><i class="fas fa-play"></i> Start custom practice</button>
-                    <button class="btn" id="resetCustomListBtn">🗑️ Reset to default</button>
+                    <textarea id="bulkWords" rows="2" placeholder="✨ Quick import: paste multiple words or phrases separated by commas or lines&#10;Example: rendezvous, entrepreneur, schedule, I am determined, wonderful day"></textarea>
+                    <button class="btn btn-primary" id="importListBtn"><i class="fas fa-file-import"></i> Import List</button>
+                </div>
+                <div class="input-group">
+                    <button class="btn" id="startCustomPracticeBtn"><i class="fas fa-play"></i> Start Practice</button>
+                    <button class="btn btn-outline" id="resetCustomListBtn"><i class="fas fa-trash-alt"></i> Reset to Default</button>
                 </div>
                 <div id="customWordBadges" style="margin-top: 1rem; display: flex; flex-wrap: wrap; gap: 8px;"></div>
-                <p class="suggestion-hint" style="margin-top: 10px;"><i class="fas fa-lightbulb"></i> Tip: The app also suggests sentences with your words!</p>
+                <p class="suggestion-hint" style="margin-top: 15px; display: inline-block;">
+                    <i class="fas fa-lightbulb"></i> <strong>How it works:</strong> Add your own words, then click "Start Practice" to begin. The app will help you practice each word and give pronunciation feedback!
+                </p>
             </div>
         </div>
     </div>
@@ -448,6 +513,7 @@
     const randomModeBtn = document.getElementById('randomModeBtn');
     const customModeBtn = document.getElementById('customModeBtn');
     const customPanel = document.getElementById('customPanel');
+    const customSection = document.getElementById('customSection');
     const currentPromptDisplay = document.getElementById('currentPromptDisplay');
     const suggestionHintSpan = document.getElementById('suggestionHint');
     const micBtn = document.getElementById('micBtn');
@@ -473,14 +539,24 @@
         C2: "🔮 C2: Mastery level - sophisticated & nuanced language"
     };
 
-    // Simple, clean speech function - just says what you tell it
+    // Smooth scroll to element
+    function smoothScrollToElement(element) {
+        element.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start',
+            inline: 'nearest'
+        });
+        element.classList.add('highlight');
+        setTimeout(() => {
+            element.classList.remove('highlight');
+        }, 1500);
+    }
+
     function speakCalmly(text, cancelPrevious = true) {
         if (!synth) return;
-        
         if (cancelPrevious) {
             synth.cancel();
         }
-        
         const utterance = new SpeechSynthesisUtterance(text);
         utterance.rate = 0.85;
         utterance.pitch = 1.0;
@@ -500,14 +576,11 @@
         synth.speak(utterance);
     }
 
-    // Simple guidance - just speaks the word clearly once
     function givePronunciationGuidance() {
         if (synth) {
             synth.cancel();
         }
-        const word = currentPracticeWord;
-        // Just say the word clearly, no extra instructions
-        speakCalmly(word, true);
+        speakCalmly(currentPracticeWord, true);
     }
 
     function getRandomWordByLevel() {
@@ -566,7 +639,7 @@
     function updateCustomBadges() {
         customWordBadges.innerHTML = "";
         if (customWordsList.length === 0) {
-            customWordBadges.innerHTML = "<span style='opacity:0.6'>No custom words — add some above!</span>";
+            customWordBadges.innerHTML = "<span style='opacity:0.6'>📭 No custom words yet — add some words above to start practicing!</span>";
             return;
         }
         customWordsList.forEach((w) => {
@@ -586,6 +659,14 @@
             });
             customWordBadges.appendChild(badge);
         });
+        
+        // Add word count indicator
+        const countBadge = document.createElement('div');
+        countBadge.style.marginTop = "8px";
+        countBadge.style.fontSize = "0.75rem";
+        countBadge.style.color = "#5f7f9a";
+        countBadge.innerHTML = `<i class="fas fa-layer-group"></i> ${customWordsList.length} word${customWordsList.length !== 1 ? 's' : ''} in your collection`;
+        customWordBadges.appendChild(countBadge);
     }
 
     function importFromTextArea() {
@@ -600,7 +681,8 @@
             refreshDisplay();
         }
         bulkWords.value = "";
-        speakCalmly(`Great! You have ${customWordsList.length} custom items ready.`);
+        speakCalmly(`Great! You have ${customWordsList.length} custom items ready.`, true);
+        feedbackTextSpan.innerText = `✅ Imported ${customWordsList.length} words! Ready to practice.`;
     }
 
     function addSingleWord() {
@@ -609,7 +691,8 @@
         customWordsList.push(newWord);
         updateCustomBadges();
         singleWordInput.value = "";
-        speakCalmly(`Added ${newWord}`);
+        speakCalmly(`Added ${newWord}`, true);
+        feedbackTextSpan.innerText = `✅ Added "${newWord}" to your word bank!`;
     }
 
     function resetCustomList() {
@@ -619,7 +702,8 @@
             currentPracticeWord = customWordsList[0];
             refreshDisplay();
         }
-        speakCalmly("Custom list reset to default words.");
+        speakCalmly("Custom list reset to default words.", true);
+        feedbackTextSpan.innerText = "🔄 Custom list reset to default words!";
     }
 
     function similarityScore(expected, spoken) {
@@ -795,18 +879,25 @@
             customModeBtn.classList.remove("active");
             customPanel.style.display = "none";
             currentPracticeWord = getRandomWordByLevel();
+            feedbackTextSpan.innerText = "Random Practice mode active. Words from your selected level!";
         } else {
             customModeBtn.classList.add("active");
             randomModeBtn.classList.remove("active");
             customPanel.style.display = "block";
+            
+            // Smooth scroll to custom section
+            setTimeout(() => {
+                smoothScrollToElement(customSection);
+            }, 100);
+            
             if (customWordsList.length === 0) {
                 customWordsList = ["apple", "beautiful", "determination"];
                 updateCustomBadges();
             }
             currentPracticeWord = customWordsList[0];
+            feedbackTextSpan.innerText = "✨ Custom Practice mode! Add your own words below and click 'Start Practice' to begin.";
         }
         refreshDisplay();
-        feedbackTextSpan.innerText = `Switched to ${mode === "random" ? "Random Practice" : "Custom Practice"} mode. Click mic to speak.`;
         scoreSpanDiv.innerHTML = "";
     }
 
@@ -837,8 +928,10 @@
                 currentPracticeWord = customWordsList[Math.floor(Math.random() * customWordsList.length)];
                 refreshDisplay();
                 speakCalmly(`${currentPracticeWord}`, true);
+                feedbackTextSpan.innerText = `🎯 Now practicing: "${currentPracticeWord}". Click 'Speak & Check' to pronounce it!`;
             } else {
-                feedbackTextSpan.innerText = "Please add words first!";
+                feedbackTextSpan.innerText = "📝 Please add some words to your word bank first!";
+                smoothScrollToElement(customSection);
             }
         });
         resetCustomListBtn.addEventListener('click', resetCustomList);
