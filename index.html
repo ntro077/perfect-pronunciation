@@ -555,57 +555,40 @@
     };
 
     // ========== STRICT PRONUNCIATION SCORING ==========
-    // This function is much stricter - penalizes:
-    // - Missing syllables
-    // - Different word lengths
-    // - Wrong sounds
     function strictPronunciationScore(expected, spoken) {
         if (!spoken || spoken.length === 0) return 0;
         
-        // Normalize both strings
         let normExpected = expected.toLowerCase().trim().replace(/[^\w\s]/g, '');
         let normSpoken = spoken.toLowerCase().trim().replace(/[^\w\s]/g, '');
         
-        // Exact match gets 100%
         if (normExpected === normSpoken) return 100;
         
-        // Split into words for phrases
         const expectedWords = normExpected.split(/\s+/);
         const spokenWords = normSpoken.split(/\s+/);
         
-        // Penalty for different number of words
         let wordCountPenalty = 0;
         if (expectedWords.length !== spokenWords.length) {
             wordCountPenalty = Math.min(30, Math.abs(expectedWords.length - spokenWords.length) * 15);
         }
         
-        // Calculate character-level similarity with higher penalty
         const maxLen = Math.max(normExpected.length, normSpoken.length);
-        const minLen = Math.min(normExpected.length, normSpoken.length);
         
-        // Length difference penalty (if words are very different in length)
         let lengthPenalty = 0;
         if (Math.abs(normExpected.length - normSpoken.length) > 3) {
             lengthPenalty = Math.min(25, Math.abs(normExpected.length - normSpoken.length) * 5);
         }
         
-        // Enhanced Levenshtein distance with character importance
         const distance = levenshteinDistance(normExpected, normSpoken);
         let similarityScore = ((maxLen - distance) / maxLen) * 100;
         
-        // Additional strictness: check for syllable count approximation
         const syllableCountExpected = estimateSyllables(normExpected);
         const syllableCountSpoken = estimateSyllables(normSpoken);
         let syllablePenalty = Math.abs(syllableCountExpected - syllableCountSpoken) * 8;
         syllablePenalty = Math.min(20, syllablePenalty);
         
-        // Final score calculation with all penalties
         let finalScore = similarityScore - wordCountPenalty - lengthPenalty - syllablePenalty;
-        
-        // Ensure score is between 0 and 100
         finalScore = Math.max(0, Math.min(100, Math.floor(finalScore)));
         
-        // Additional check: if the spoken word is completely different (low similarity), cap at 50%
         if (similarityScore < 40) {
             finalScore = Math.min(finalScore, 45);
         }
@@ -613,7 +596,6 @@
         return finalScore;
     }
     
-    // Levenshtein distance algorithm
     function levenshteinDistance(a, b) {
         const matrix = [];
         for (let i = 0; i <= b.length; i++) {
@@ -638,7 +620,6 @@
         return matrix[b.length][a.length];
     }
     
-    // Simple syllable estimation (for penalty)
     function estimateSyllables(word) {
         word = word.toLowerCase();
         let count = 0;
@@ -656,7 +637,6 @@
             }
         }
         
-        // Special handling for silent e at the end
         if (word.endsWith('e')) {
             count = Math.max(1, count - 1);
         }
@@ -931,15 +911,15 @@
                 scoreClass = "score-excellent";
             } else if (score >= 70) {
                 feedbackMsg += `👍 Good effort. Score: ${score}%. Small improvements needed.`;
-                speakCalmly(`Almost there. ${expected}`, true);
+                speakCalmly(`${expected}`, true);
                 scoreClass = "score-good";
             } else if (score >= 50) {
                 feedbackMsg += `📢 Fair attempt. Score: ${score}%. Listen carefully and try again.`;
-                speakCalmly(`Try again. ${expected}`, true);
+                speakCalmly(`${expected}`, true);
                 scoreClass = "score-poor";
             } else {
                 feedbackMsg += `⚠️ Needs more practice. Score: ${score}%. Let's work on this one.`;
-                speakCalmly(`Let's practice. ${expected}`, true);
+                speakCalmly(`${expected}`, true);
                 scoreClass = "score-poor";
             }
             
@@ -997,7 +977,7 @@
         if (currentMode === "random") {
             currentPracticeWord = getRandomWordByLevel();
             refreshDisplay();
-            speakCalmly(`Level ${level}. ${currentPracticeWord}`, true);
+            // NO speech for level change - removed speakCalmly call
         }
         feedbackTextSpan.innerText = `Level set to ${level}. Ready to practice!`;
     }
@@ -1011,7 +991,7 @@
             currentPracticeWord = getRandomWordByLevel();
             refreshDisplay();
             feedbackTextSpan.innerText = "Random Practice mode active. Words from your selected level!";
-            speakCalmly(`Random practice mode. ${currentPracticeWord}`, true);
+            // NO speech for mode change - removed speakCalmly call
         } else {
             customModeBtn.classList.add("active");
             randomModeBtn.classList.remove("active");
@@ -1060,7 +1040,7 @@
         setMode("random");
         
         setTimeout(() => {
-            speakCalmly("Welcome to Perfect Pronunciation. The app now uses strict scoring to help you improve.", true);
+            speakCalmly("Welcome to Perfect Pronunciation", true);
         }, 500);
     }
 
