@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>Perfect Pronunciation | AI Speech Coach with Strict Scoring</title>
+    <title>Perfect Pronunciation | Honest AI Speech Coach</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
@@ -100,14 +100,12 @@
             transition: all 0.2s ease;
             color: #2c5a74;
             font-family: monospace;
-            letter-spacing: 0.5px;
         }
 
         .level-btn.active {
             background: #2c7da0;
             color: white;
             box-shadow: 0 4px 10px rgba(44,125,160,0.3);
-            transform: scale(1.02);
         }
 
         .level-btn:hover:not(.active) {
@@ -150,7 +148,6 @@
             background: #1e4660;
             color: white;
             box-shadow: 0 12px 18px -8px rgba(0, 47, 75, 0.3);
-            transform: scale(1.02);
         }
 
         .mode-btn:not(.active):hover {
@@ -225,13 +222,6 @@
 
         .btn-primary:hover {
             background: #1f6685;
-            transform: scale(0.98);
-        }
-
-        .btn-primary:disabled {
-            background: #95b6c9;
-            cursor: not-allowed;
-            transform: none;
         }
 
         .btn-outline {
@@ -254,7 +244,7 @@
             border-radius: 1.5rem;
             padding: 1.2rem;
             margin-top: 1rem;
-            text-align: center;
+            text-align: left;
             font-size: 1rem;
             border-left: 6px solid #2c7da0;
         }
@@ -262,19 +252,27 @@
         .feedback .score {
             font-weight: 800;
             font-size: 1.3rem;
+            display: inline-block;
+            margin-bottom: 8px;
         }
 
-        .score-poor {
+        .mistake-analysis {
+            background: #fff3e0;
+            border-radius: 1rem;
+            padding: 0.8rem;
+            margin-top: 0.8rem;
+            border-left: 4px solid #e67e22;
+            font-size: 0.9rem;
+        }
+
+        .mistake-analysis i {
             color: #e67e22;
+            margin-right: 6px;
         }
-        
-        .score-good {
-            color: #27ae60;
-        }
-        
-        .score-excellent {
-            color: #2c7da0;
-        }
+
+        .score-poor { color: #e67e22; }
+        .score-good { color: #27ae60; }
+        .score-excellent { color: #2c7da0; }
 
         .custom-section {
             margin-top: 1rem;
@@ -291,7 +289,6 @@
 
         .practice-card.highlight-practice {
             box-shadow: 0 0 0 3px #27ae60, 0 0 0 6px rgba(39,174,96,0.2);
-            transition: box-shadow 0.3s ease;
         }
 
         .custom-header {
@@ -309,14 +306,6 @@
             display: flex;
             align-items: center;
             gap: 10px;
-        }
-
-        .custom-badge-info {
-            background: #e8f0fe;
-            padding: 0.3rem 0.8rem;
-            border-radius: 40px;
-            font-size: 0.8rem;
-            color: #2c7da0;
         }
 
         .input-group {
@@ -367,10 +356,6 @@
             font-weight: 600;
         }
 
-        .footer-credit a:hover {
-            text-decoration: underline;
-        }
-
         .custom-badge {
             background: #e1ecf4;
             padding: 4px 12px;
@@ -391,11 +376,6 @@
             50% { opacity: 0.5; }
         }
 
-        @keyframes highlightFlash {
-            0% { background-color: rgba(39,174,96,0.3); }
-            100% { background-color: transparent; }
-        }
-
         .animate-word {
             animation: gentlePop 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
         }
@@ -403,10 +383,6 @@
         .mic-listening {
             animation: pulse 1s infinite;
             background: #e67e22 !important;
-        }
-
-        .flash-green {
-            animation: highlightFlash 1s ease-out;
         }
 
         @media (max-width: 650px) {
@@ -423,9 +399,9 @@
 <div class="app-container">
     <div class="hero">
         <h1>🗣️ Perfect Pronunciation</h1>
-        <p>welcome to perfect your pronunciation — speak clearly, sound confident</p>
+        <p>honest feedback · detailed mistake analysis · strict scoring</p>
         <div class="voice-badge" style="margin-top: 12px; background: rgba(255,255,255,0.2); color:white;">
-            <i class="fas fa-head-side-vr"></i> calm voice guidance · strict pronunciation scoring
+            <i class="fas fa-head-side-vr"></i> calm voice guidance · honest pronunciation coach
         </div>
     </div>
 
@@ -435,14 +411,14 @@
                 <i class="fas fa-chart-line"></i> English Level:
             </div>
             <div class="level-buttons" id="levelButtons">
-                <button class="level-btn" data-level="A1">A1 (Beginner)</button>
-                <button class="level-btn" data-level="A2">A2 (Elementary)</button>
-                <button class="level-btn" data-level="B1">B1 (Intermediate)</button>
-                <button class="level-btn" data-level="B2">B2 (Upper Int.)</button>
-                <button class="level-btn" data-level="C1">C1 (Advanced)</button>
-                <button class="level-btn" data-level="C2">C2 (Mastery)</button>
+                <button class="level-btn" data-level="A1">A1</button>
+                <button class="level-btn" data-level="A2">A2</button>
+                <button class="level-btn" data-level="B1">B1</button>
+                <button class="level-btn" data-level="B2">B2</button>
+                <button class="level-btn" data-level="C1">C1</button>
+                <button class="level-btn" data-level="C2">C2</button>
             </div>
-            <div class="level-desc" id="levelDesc">📘 A1: Basic words & simple phrases</div>
+            <div class="level-desc" id="levelDesc">📘 A1: Basic words</div>
         </div>
 
         <div class="mode-selector">
@@ -453,75 +429,72 @@
         <div class="practice-card" id="practiceCard">
             <div class="word-area">
                 <div class="current-prompt" id="currentPromptDisplay">click mic & speak</div>
-                <div class="suggestion-hint" id="suggestionHint">✨ level-based words for your English journey</div>
+                <div class="suggestion-hint" id="suggestionHint">✨ Speak clearly for honest feedback</div>
             </div>
 
             <div class="action-buttons">
                 <button class="btn btn-primary" id="micBtn"><i class="fas fa-microphone"></i> Speak & Check</button>
                 <button class="btn" id="nextBtn"><i class="fas fa-arrow-right"></i> Next Word</button>
-                <button class="btn btn-outline" id="listenGuidanceBtn"><i class="fas fa-volume-up"></i> Listen Guidance</button>
+                <button class="btn btn-outline" id="listenGuidanceBtn"><i class="fas fa-volume-up"></i> Listen</button>
             </div>
 
             <div class="feedback" id="feedbackArea">
                 <i class="fas fa-comment-dots"></i> <span id="feedbackText">Ready! Press 'Speak & Check' and say the word clearly.</span>
                 <div id="scoreSpan" style="margin-top: 6px;"></div>
+                <div id="mistakeAnalysis" style="margin-top: 10px;"></div>
             </div>
         </div>
 
         <div id="customPanel" style="display: none;">
             <div class="custom-section" id="customSection">
                 <div class="custom-header">
-                    <h3><i class="fas fa-edit"></i> Your Personal Word Bank</h3>
+                    <h3><i class="fas fa-edit"></i> Your Word Bank</h3>
                     <div class="custom-badge-info">
-                        <i class="fas fa-info-circle"></i> Add words you want to practice
+                        <i class="fas fa-info-circle"></i> Add your own words
                     </div>
                 </div>
                 <div class="input-group">
-                    <input type="text" id="singleWordInput" placeholder="Add a word or phrase (e.g., 'beautiful' or 'I love learning')">
-                    <button class="btn btn-success" id="addWordBtn"><i class="fas fa-plus-circle"></i> Add Word</button>
+                    <input type="text" id="singleWordInput" placeholder="Add a word or phrase">
+                    <button class="btn btn-success" id="addWordBtn"><i class="fas fa-plus-circle"></i> Add</button>
                 </div>
                 <div class="input-group">
-                    <textarea id="bulkWords" rows="2" placeholder="✨ Quick import: paste multiple words or phrases separated by commas or lines&#10;Example: rendezvous, entrepreneur, schedule, I am determined, wonderful day"></textarea>
-                    <button class="btn btn-primary" id="importListBtn"><i class="fas fa-file-import"></i> Import List</button>
+                    <textarea id="bulkWords" rows="2" placeholder="Paste multiple words separated by commas&#10;Example: beautiful, entrepreneur, I love English"></textarea>
+                    <button class="btn btn-primary" id="importListBtn"><i class="fas fa-file-import"></i> Import</button>
                 </div>
                 <div class="input-group">
                     <button class="btn btn-success" id="startCustomPracticeBtn"><i class="fas fa-play"></i> Start Practice</button>
-                    <button class="btn btn-outline" id="resetCustomListBtn"><i class="fas fa-trash-alt"></i> Reset to Default</button>
+                    <button class="btn btn-outline" id="resetCustomListBtn"><i class="fas fa-trash-alt"></i> Reset</button>
                 </div>
                 <div id="customWordBadges" style="margin-top: 1rem; display: flex; flex-wrap: wrap; gap: 8px;"></div>
-                <p class="suggestion-hint" style="margin-top: 15px; display: inline-block;">
-                    <i class="fas fa-lightbulb"></i> <strong>How it works:</strong> Add your own words, then click "Start Practice" to begin. The app uses strict pronunciation scoring to help you improve!
-                </p>
             </div>
         </div>
     </div>
     <div class="footer-credit">
         made by englishteacher rush &nbsp;|&nbsp; 
-        <a href="https://ntro077.github.io/my-teaching-site/" target="_blank"><i class="fas fa-globe"></i> visit my website for more resources</a>
+        <a href="https://ntro077.github.io/my-teaching-site/" target="_blank"><i class="fas fa-globe"></i> visit my website</a>
     </div>
 </div>
 
 <script>
     // Vocabulary by level
     const vocabularyByLevel = {
-        A1: ["cat", "dog", "house", "happy", "sad", "big", "small", "apple", "water", "mother", "father", "school", "book", "pen", "red", "blue", "I like apples", "good morning"],
-        A2: ["beautiful", "important", "delicious", "travel", "holiday", "weekend", "weather", "family", "interesting", "exciting", "restaurant", "shopping", "because", "often", "I usually wake up early", "What time is it?"],
-        B1: ["adventure", "challenge", "environment", "experience", "famous", "generous", "independent", "necessary", "opportunity", "responsible", "schedule", "therefore", "although", "I am looking forward to", "She has been working hard"],
-        B2: ["accommodation", "consequence", "dilemma", "entrepreneur", "flexible", "globalization", "hypothesis", "innovative", "justification", "negotiate", "perspective", "sustainable development", "controversial issue", "The results indicate that"],
-        C1: ["acquiesce", "cogent", "demarcation", "ephemeral", "fortuitous", "grandiloquent", "hedonism", "idiosyncrasy", "juxtaposition", "ken", "loquacious", "meticulous", "nuance", "obfuscate", "paradigm shift", "quintessential", "Furthermore, the analysis reveals"],
-        C2: ["antediluvian", "bombastic", "circumlocution", "diaphanous", "esoteric", "grandiose", "hyperbole", "ineffable", "kaleidoscopic", "labyrinthine", "metamorphosis", "nomenclature", "obstreperous", "perspicacious", "The juxtaposition of these ideologies creates a dichotomy"]
+        A1: ["cat", "dog", "house", "happy", "big", "apple", "water", "school", "book", "red", "blue", "good morning"],
+        A2: ["beautiful", "important", "delicious", "travel", "family", "interesting", "restaurant", "because", "often"],
+        B1: ["adventure", "challenge", "environment", "experience", "opportunity", "responsible", "schedule", "although"],
+        B2: ["entrepreneur", "flexible", "globalization", "innovative", "negotiate", "perspective", "sustainable"],
+        C1: ["acquiesce", "ephemeral", "fortuitous", "idiosyncrasy", "meticulous", "nuance", "paradigm shift"],
+        C2: ["antediluvian", "circumlocution", "esoteric", "ineffable", "labyrinthine", "metamorphosis", "perspicacious"]
     };
 
     let currentLevel = "A1";
     let currentMode = "random";
     let currentPracticeWord = "cat";
-    let customWordsList = ["apple", "banana", "challenge", "serendipity", "I appreciate it"];
+    let customWordsList = ["apple", "beautiful", "challenge"];
     
     let recognition = null;
     let synth = window.speechSynthesis;
     let isListening = false;
     let mediaStream = null;
-    let isSpeaking = false;
 
     // DOM elements
     const randomModeBtn = document.getElementById('randomModeBtn');
@@ -536,6 +509,7 @@
     const listenGuidanceBtn = document.getElementById('listenGuidanceBtn');
     const feedbackTextSpan = document.getElementById('feedbackText');
     const scoreSpanDiv = document.getElementById('scoreSpan');
+    const mistakeAnalysisDiv = document.getElementById('mistakeAnalysis');
     const addWordBtn = document.getElementById('addWordBtn');
     const singleWordInput = document.getElementById('singleWordInput');
     const bulkWords = document.getElementById('bulkWords');
@@ -545,55 +519,169 @@
     const customWordBadges = document.getElementById('customWordBadges');
     const levelDesc = document.getElementById('levelDesc');
 
-    const levelDescriptions = {
-        A1: "📘 A1: Basic words & simple phrases - perfect for beginners",
-        A2: "📙 A2: Everyday words & common expressions",
-        B1: "📗 B1: Intermediate vocabulary & useful phrases",
-        B2: "📕 B2: Upper-intermediate academic & professional terms",
-        C1: "📖 C1: Advanced vocabulary & complex expressions",
-        C2: "🔮 C2: Mastery level - sophisticated & nuanced language"
-    };
-
-    // ========== STRICT PRONUNCIATION SCORING ==========
-    function strictPronunciationScore(expected, spoken) {
-        if (!spoken || spoken.length === 0) return 0;
+    // ========== HONEST PRONUNCIATION SCORING WITH DETAILED ANALYSIS ==========
+    
+    function analyzePronunciation(expected, spoken) {
+        if (!spoken || spoken.length === 0) {
+            return { score: 0, mistakes: ["No speech detected. Please speak into the microphone."] };
+        }
         
         let normExpected = expected.toLowerCase().trim().replace(/[^\w\s]/g, '');
         let normSpoken = spoken.toLowerCase().trim().replace(/[^\w\s]/g, '');
         
-        if (normExpected === normSpoken) return 100;
+        // Exact match gets 100%
+        if (normExpected === normSpoken) {
+            return { score: 100, mistakes: [], isPerfect: true };
+        }
         
         const expectedWords = normExpected.split(/\s+/);
         const spokenWords = normSpoken.split(/\s+/);
+        let mistakes = [];
         
-        let wordCountPenalty = 0;
+        // Check word count
         if (expectedWords.length !== spokenWords.length) {
-            wordCountPenalty = Math.min(30, Math.abs(expectedWords.length - spokenWords.length) * 15);
+            mistakes.push(`📊 Word count: Expected ${expectedWords.length} word(s), you said ${spokenWords.length}`);
         }
         
+        // Character-level comparison
         const maxLen = Math.max(normExpected.length, normSpoken.length);
+        const distance = levenshteinDistance(normExpected, normSpoken);
+        let baseScore = ((maxLen - distance) / maxLen) * 100;
         
-        let lengthPenalty = 0;
-        if (Math.abs(normExpected.length - normSpoken.length) > 3) {
-            lengthPenalty = Math.min(25, Math.abs(normExpected.length - normSpoken.length) * 5);
+        // Length difference penalty
+        const lengthDiff = Math.abs(normExpected.length - normSpoken.length);
+        if (lengthDiff > 0) {
+            let lengthPenalty = Math.min(20, lengthDiff * 4);
+            mistakes.push(`📏 Length: Your word has ${normSpoken.length} characters, expected ${normExpected.length} (${lengthDiff} character difference)`);
+            baseScore -= lengthPenalty;
         }
         
-        const distance = levenshteinDistance(normExpected, normSpoken);
-        let similarityScore = ((maxLen - distance) / maxLen) * 100;
+        // Syllable check
+        const expectedSyllables = countSyllables(normExpected);
+        const spokenSyllables = countSyllables(normSpoken);
+        if (expectedSyllables !== spokenSyllables) {
+            let syllableDiff = Math.abs(expectedSyllables - spokenSyllables);
+            mistakes.push(`🎵 Syllables: Expected ${expectedSyllables} syllable(s), you said ${spokenSyllables}`);
+            baseScore -= syllableDiff * 8;
+        }
         
-        const syllableCountExpected = estimateSyllables(normExpected);
-        const syllableCountSpoken = estimateSyllables(normSpoken);
-        let syllablePenalty = Math.abs(syllableCountExpected - syllableCountSpoken) * 8;
-        syllablePenalty = Math.min(20, syllablePenalty);
+        // Character-by-character analysis for single words
+        if (expectedWords.length === 1 && spokenWords.length === 1) {
+            const charMistakes = compareCharacters(normExpected, normSpoken);
+            if (charMistakes.length > 0) {
+                mistakes.push(...charMistakes.slice(0, 3));
+            }
+        }
         
-        let finalScore = similarityScore - wordCountPenalty - lengthPenalty - syllablePenalty;
-        finalScore = Math.max(0, Math.min(100, Math.floor(finalScore)));
+        // Check for common pronunciation errors (like silent letters)
+        const commonErrors = checkCommonErrors(normExpected, normSpoken);
+        mistakes.push(...commonErrors);
         
-        if (similarityScore < 40) {
+        // Final score calculation - much stricter!
+        let finalScore = baseScore;
+        
+        // Additional penalties for obvious mistakes
+        if (distance > Math.max(3, normExpected.length * 0.3)) {
+            finalScore -= 15;
+            if (!mistakes.some(m => m.includes("different"))) {
+                mistakes.push(`🔍 Your pronunciation sounds quite different from "${expected}"`);
+            }
+        }
+        
+        // Cap score based on similarity
+        if (baseScore < 50) {
             finalScore = Math.min(finalScore, 45);
         }
         
-        return finalScore;
+        // Ensure score is between 0 and 100
+        finalScore = Math.max(0, Math.min(100, Math.floor(finalScore)));
+        
+        // Only perfect score for exact match
+        if (normExpected !== normSpoken && finalScore >= 95) {
+            finalScore = Math.min(94, finalScore);
+        }
+        
+        // Remove duplicate mistakes
+        const uniqueMistakes = [...new Map(mistakes.map(m => [m, m])).values()];
+        
+        return { score: finalScore, mistakes: uniqueMistakes.slice(0, 4), isPerfect: false };
+    }
+    
+    function compareCharacters(expected, spoken) {
+        let mistakes = [];
+        const maxCompare = Math.min(expected.length, spoken.length);
+        let differences = [];
+        
+        for (let i = 0; i < maxCompare; i++) {
+            if (expected[i] !== spoken[i]) {
+                differences.push(`position ${i+1}: said "${spoken[i]}" instead of "${expected[i]}"`);
+            }
+        }
+        
+        if (differences.length > 0) {
+            mistakes.push(`🔤 Letter difference: ${differences.slice(0, 2).join(', ')}`);
+        }
+        
+        if (spoken.length > expected.length) {
+            let extra = spoken.slice(expected.length);
+            mistakes.push(`➕ Extra letters: "${extra}" at the end`);
+        } else if (expected.length > spoken.length) {
+            let missing = expected.slice(spoken.length);
+            mistakes.push(`➖ Missing letters: "${missing}" at the end`);
+        }
+        
+        return mistakes;
+    }
+    
+    function checkCommonErrors(expected, spoken) {
+        let errors = [];
+        
+        // Common pronunciation pitfalls
+        const silentLetters = {
+            "knife": "nife",
+            "knee": "nee",
+            "psychology": "sikology",
+            "receipt": "reseet",
+            "doubt": "dout",
+            "island": "iland"
+        };
+        
+        for (let [correct, commonError] of Object.entries(silentLetters)) {
+            if (expected === correct && spoken.includes(commonError)) {
+                errors.push(`⚠️ Remember: the '${correct[0]}' in "${correct}" is silent!`);
+            }
+        }
+        
+        // Check for common ending mistakes
+        if (expected.endsWith('ed') && spoken.endsWith('id')) {
+            errors.push(`💡 The "-ed" ending should sound like "t" or "d", not "id" for this word`);
+        }
+        
+        return errors;
+    }
+    
+    function countSyllables(word) {
+        word = word.toLowerCase();
+        let count = 0;
+        let vowels = 'aeiou';
+        let isPrevVowel = false;
+        
+        for (let i = 0; i < word.length; i++) {
+            if (vowels.includes(word[i])) {
+                if (!isPrevVowel) {
+                    count++;
+                    isPrevVowel = true;
+                }
+            } else {
+                isPrevVowel = false;
+            }
+        }
+        
+        if (word.endsWith('e')) {
+            count = Math.max(1, count - 1);
+        }
+        
+        return Math.max(1, count);
     }
     
     function levenshteinDistance(a, b) {
@@ -620,80 +708,36 @@
         return matrix[b.length][a.length];
     }
     
-    function estimateSyllables(word) {
-        word = word.toLowerCase();
-        let count = 0;
-        let vowels = 'aeiou';
-        let isPrevVowel = false;
-        
-        for (let i = 0; i < word.length; i++) {
-            if (vowels.includes(word[i])) {
-                if (!isPrevVowel) {
-                    count++;
-                    isPrevVowel = true;
-                }
-            } else {
-                isPrevVowel = false;
-            }
+    function getScoreMessage(score, mistakes) {
+        if (score >= 95) {
+            return "🌟 Perfect! Excellent pronunciation!";
+        } else if (score >= 85) {
+            return "🎉 Very good! Just a tiny improvement needed.";
+        } else if (score >= 70) {
+            return "👍 Good effort! Keep practicing these sounds.";
+        } else if (score >= 50) {
+            return "📚 Getting there! Listen carefully and try again.";
+        } else {
+            return "🎯 Let's practice this one more time. Focus on each sound.";
         }
-        
-        if (word.endsWith('e')) {
-            count = Math.max(1, count - 1);
-        }
-        
-        return Math.max(1, count);
-    }
-
-    function smoothScrollToElement(element, highlightClass = 'highlight') {
-        element.scrollIntoView({
-            behavior: 'smooth',
-            block: 'start',
-            inline: 'nearest'
-        });
-        element.classList.add(highlightClass);
-        setTimeout(() => {
-            element.classList.remove(highlightClass);
-        }, 1500);
-    }
-
-    function scrollToPracticeArea() {
-        smoothScrollToElement(practiceCard, 'highlight-practice');
     }
 
     function speakCalmly(text, cancelPrevious = true) {
         if (!synth) return;
-        if (cancelPrevious) {
-            synth.cancel();
-        }
+        if (cancelPrevious) synth.cancel();
         const utterance = new SpeechSynthesisUtterance(text);
         utterance.rate = 0.85;
         utterance.pitch = 1.0;
-        utterance.volume = 1;
         utterance.lang = 'en-US';
-        
-        let voices = synth.getVoices();
-        if (voices.length) {
-            let preferred = voices.find(v => v.lang === 'en-US' && (v.name.includes('Google') || v.name.includes('Samantha') || v.name.includes('Female')));
-            if (preferred) utterance.voice = preferred;
-        }
-        
-        utterance.onstart = () => { isSpeaking = true; };
-        utterance.onend = () => { isSpeaking = false; };
-        utterance.onerror = () => { isSpeaking = false; };
-        
         synth.speak(utterance);
     }
 
     function givePronunciationGuidance() {
-        if (synth) {
-            synth.cancel();
-        }
         speakCalmly(currentPracticeWord, true);
     }
 
     function getRandomWordByLevel() {
         const words = vocabularyByLevel[currentLevel];
-        if (!words || words.length === 0) return "hello";
         return words[Math.floor(Math.random() * words.length)];
     }
 
@@ -701,10 +745,6 @@
         if (currentMode === "random") {
             return getRandomWordByLevel();
         } else {
-            if (!customWordsList.length) {
-                customWordsList = ["practice", "communication", "English"];
-                updateCustomBadges();
-            }
             return customWordsList[Math.floor(Math.random() * customWordsList.length)];
         }
     }
@@ -712,53 +752,34 @@
     function refreshDisplay() {
         currentPromptDisplay.innerText = currentPracticeWord;
         if (currentMode === "random") {
-            suggestionHintSpan.innerHTML = `🎯 Level ${currentLevel} · "${currentPracticeWord}" — focus on clear pronunciation.`;
+            suggestionHintSpan.innerHTML = `🎯 Level ${currentLevel} · "${currentPracticeWord}"`;
         } else {
-            let sentence = generateSampleSentence(currentPracticeWord);
-            suggestionHintSpan.innerHTML = `📘 Sample: "${sentence}" — practice in context.`;
+            suggestionHintSpan.innerHTML = `📘 Custom word: "${currentPracticeWord}"`;
         }
         currentPromptDisplay.classList.add('animate-word');
         setTimeout(() => currentPromptDisplay.classList.remove('animate-word'), 300);
     }
 
-    function generateSampleSentence(word) {
-        const templates = [
-            `Practice saying "${word}".`, `Can you pronounce "${word}" correctly?`, `Let's work on "${word}".`,
-            `Focus on the sounds in "${word}".`, `Say "${word}" with confidence.`
-        ];
-        return templates[Math.floor(Math.random() * templates.length)];
-    }
-
     function nextPractice() {
-        if (isListening) {
-            feedbackTextSpan.innerText = "Please wait, still listening...";
-            return;
-        }
-        if (synth && isSpeaking) {
-            synth.cancel();
-        }
+        if (isListening) return;
         let newWord = getRandomPracticeWord();
         currentPracticeWord = newWord;
         refreshDisplay();
         feedbackTextSpan.innerText = "New word! Press mic and speak clearly.";
         scoreSpanDiv.innerHTML = "";
+        mistakeAnalysisDiv.innerHTML = "";
     }
 
     function updateCustomBadges() {
         customWordBadges.innerHTML = "";
-        if (customWordsList.length === 0) {
-            customWordBadges.innerHTML = "<span style='opacity:0.6'>📭 No custom words yet — add some words above to start practicing!</span>";
-            return;
-        }
         customWordsList.forEach((w) => {
             let badge = document.createElement('span');
             badge.className = 'custom-badge';
-            badge.innerHTML = `${w} <i class="fas fa-times-circle" style="cursor:pointer; color:#7f8c8d; font-size:12px;" data-word="${w}"></i>`;
+            badge.innerHTML = `${w} <i class="fas fa-times-circle" style="cursor:pointer; font-size:12px;" data-word="${w}"></i>`;
             badge.querySelector('i').addEventListener('click', (e) => {
-                e.stopPropagation();
                 let wordToRemove = e.target.getAttribute('data-word');
                 customWordsList = customWordsList.filter(item => item !== wordToRemove);
-                if (customWordsList.length === 0) customWordsList = ["hello", "world"];
+                if (customWordsList.length === 0) customWordsList = ["practice"];
                 if (currentMode === "custom" && !customWordsList.includes(currentPracticeWord)) {
                     currentPracticeWord = customWordsList[0];
                     refreshDisplay();
@@ -767,13 +788,6 @@
             });
             customWordBadges.appendChild(badge);
         });
-        
-        const countBadge = document.createElement('div');
-        countBadge.style.marginTop = "8px";
-        countBadge.style.fontSize = "0.75rem";
-        countBadge.style.color = "#5f7f9a";
-        countBadge.innerHTML = `<i class="fas fa-layer-group"></i> ${customWordsList.length} word${customWordsList.length !== 1 ? 's' : ''} in your collection`;
-        customWordBadges.appendChild(countBadge);
     }
 
     function importFromTextArea() {
@@ -788,8 +802,7 @@
             refreshDisplay();
         }
         bulkWords.value = "";
-        speakCalmly(`Great! You have ${customWordsList.length} custom items ready.`, true);
-        feedbackTextSpan.innerText = `✅ Imported ${customWordsList.length} words! Click 'Start Practice' to begin.`;
+        feedbackTextSpan.innerText = `✅ Imported ${customWordsList.length} words!`;
     }
 
     function addSingleWord() {
@@ -798,154 +811,83 @@
         customWordsList.push(newWord);
         updateCustomBadges();
         singleWordInput.value = "";
-        speakCalmly(`Added ${newWord}`, true);
-        feedbackTextSpan.innerText = `✅ Added "${newWord}" to your word bank! Click 'Start Practice' to practice it.`;
+        feedbackTextSpan.innerText = `✅ Added "${newWord}"`;
     }
 
     function resetCustomList() {
-        customWordsList = ["apple", "banana", "challenge", "serendipity", "I appreciate it", "magnificent"];
+        customWordsList = ["apple", "beautiful", "challenge", "serendipity"];
         updateCustomBadges();
         if (currentMode === "custom") {
             currentPracticeWord = customWordsList[0];
             refreshDisplay();
         }
-        speakCalmly("Custom list reset to default words.", true);
-        feedbackTextSpan.innerText = "🔄 Custom list reset to default words!";
+        feedbackTextSpan.innerText = "🔄 Custom list reset!";
     }
 
     function startCustomPractice() {
         if (customWordsList.length === 0) {
-            feedbackTextSpan.innerText = "📝 Please add some words to your word bank first!";
-            smoothScrollToElement(customSection, 'highlight');
+            feedbackTextSpan.innerText = "📝 Please add some words first!";
             return;
         }
-        
         currentPracticeWord = customWordsList[Math.floor(Math.random() * customWordsList.length)];
         refreshDisplay();
-        scrollToPracticeArea();
-        speakCalmly(`${currentPracticeWord}`, true);
-        feedbackTextSpan.innerHTML = `<i class="fas fa-microphone-alt"></i> 🎯 Now practicing: "${currentPracticeWord}". Click 'Speak & Check' to pronounce it!`;
+        practiceCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        speakCalmly(currentPracticeWord, true);
+        feedbackTextSpan.innerHTML = `🎯 Practicing: "${currentPracticeWord}". Click 'Speak & Check'!`;
         scoreSpanDiv.innerHTML = "";
-        currentPromptDisplay.classList.add('animate-word');
-        setTimeout(() => currentPromptDisplay.classList.remove('animate-word'), 300);
-    }
-
-    async function requestMicrophonePermission() {
-        try {
-            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-            if (mediaStream) {
-                mediaStream.getTracks().forEach(track => track.stop());
-            }
-            mediaStream = stream;
-            return true;
-        } catch (err) {
-            feedbackTextSpan.innerText = "❌ Microphone access denied. Please allow microphone access and try again.";
-            return false;
-        }
-    }
-
-    function initSpeechRecognition() {
-        if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
-            feedbackTextSpan.innerText = "❌ Your browser doesn't support speech recognition. Try Chrome, Edge, or Safari.";
-            return false;
-        }
-        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-        recognition = new SpeechRecognition();
-        recognition.lang = 'en-US';
-        recognition.interimResults = false;
-        recognition.maxAlternatives = 1;
-        recognition.continuous = false;
-        return true;
+        mistakeAnalysisDiv.innerHTML = "";
     }
 
     async function startListening() {
-        if (isListening) {
-            feedbackTextSpan.innerText = "Already listening... please wait.";
+        if (isListening) return;
+        
+        if (!recognition) {
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            recognition = new SpeechRecognition();
+            recognition.lang = 'en-US';
+            recognition.interimResults = false;
+        }
+        
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            if (mediaStream) mediaStream.getTracks().forEach(track => track.stop());
+            mediaStream = stream;
+        } catch (err) {
+            feedbackTextSpan.innerText = "❌ Please allow microphone access.";
             return;
         }
         
-        if (!recognition) {
-            if (!initSpeechRecognition()) return;
-        }
-        
-        const hasPermission = await requestMicrophonePermission();
-        if (!hasPermission) return;
-        
-        try {
-            if (recognition) {
-                try { recognition.abort(); } catch(e) {}
-            }
-        } catch(e) {}
-        
-        setupRecognitionEvents();
-        
-        try {
-            recognition.start();
-            isListening = true;
-            micBtn.classList.add('mic-listening');
-            micBtn.innerHTML = '<i class="fas fa-microphone-slash"></i> Listening...';
-            feedbackTextSpan.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> 🎤 Listening... speak the word clearly now!';
-            scoreSpanDiv.innerHTML = "";
-        } catch (err) {
-            isListening = false;
-            micBtn.classList.remove('mic-listening');
-            micBtn.innerHTML = '<i class="fas fa-microphone"></i> Speak & Check';
-            feedbackTextSpan.innerText = "⚠️ Could not start recording. Please click again.";
-        }
-    }
-
-    function setupRecognitionEvents() {
-        if (!recognition) return;
-        
         recognition.onresult = (event) => {
             let transcript = event.results[0][0].transcript.trim();
-            let expected = currentPracticeWord;
-            let score = strictPronunciationScore(expected, transcript);
+            let analysis = analyzePronunciation(currentPracticeWord, transcript);
+            
+            let scoreClass = "";
+            if (analysis.score >= 85) scoreClass = "score-excellent";
+            else if (analysis.score >= 60) scoreClass = "score-good";
+            else scoreClass = "score-poor";
             
             let feedbackMsg = `You said: "${transcript}". `;
-            let scoreClass = "";
-            
-            if (score >= 85) {
-                feedbackMsg += `🌟 Excellent! Perfect pronunciation! (${score}%)`;
-                speakCalmly(`Excellent! ${expected}`, true);
-                scoreClass = "score-excellent";
-            } else if (score >= 70) {
-                feedbackMsg += `👍 Good effort. Score: ${score}%. Small improvements needed.`;
-                speakCalmly(`${expected}`, true);
-                scoreClass = "score-good";
-            } else if (score >= 50) {
-                feedbackMsg += `📢 Fair attempt. Score: ${score}%. Listen carefully and try again.`;
-                speakCalmly(`${expected}`, true);
-                scoreClass = "score-poor";
-            } else {
-                feedbackMsg += `⚠️ Needs more practice. Score: ${score}%. Let's work on this one.`;
-                speakCalmly(`${expected}`, true);
-                scoreClass = "score-poor";
-            }
+            feedbackMsg += getScoreMessage(analysis.score, analysis.mistakes);
             
             feedbackTextSpan.innerHTML = feedbackMsg;
-            scoreSpanDiv.innerHTML = `<span class="score ${scoreClass}">🎯 Pronunciation score: ${score}%</span>`;
+            scoreSpanDiv.innerHTML = `<span class="score ${scoreClass}">🎯 Score: ${analysis.score}%</span>`;
+            
+            if (analysis.mistakes.length > 0) {
+                mistakeAnalysisDiv.innerHTML = `<div class="mistake-analysis"><i class="fas fa-info-circle"></i> <strong>How to improve:</strong><br>${analysis.mistakes.map(m => `• ${m}`).join('<br>')}</div>`;
+            } else if (analysis.score >= 95) {
+                mistakeAnalysisDiv.innerHTML = `<div class="mistake-analysis" style="background:#e8f5e9; border-left-color:#27ae60;"><i class="fas fa-check-circle"></i> Perfect! Great job!</div>`;
+            } else {
+                mistakeAnalysisDiv.innerHTML = `<div class="mistake-analysis"><i class="fas fa-microphone-alt"></i> Try saying it again slowly, focusing on each sound.</div>`;
+            }
+            
+            speakCalmly(analysis.score >= 80 ? `Good job` : `Try again`, true);
             isListening = false;
             micBtn.classList.remove('mic-listening');
             micBtn.innerHTML = '<i class="fas fa-microphone"></i> Speak & Check';
         };
         
-        recognition.onerror = (ev) => {
-            let errorMsg = "";
-            switch(ev.error) {
-                case 'not-allowed':
-                    errorMsg = "❌ Microphone access denied. Please allow microphone access and try again.";
-                    break;
-                case 'no-speech':
-                    errorMsg = "🎤 No speech detected. Please speak clearly into the microphone.";
-                    break;
-                case 'audio-capture':
-                    errorMsg = "🎤 No microphone found. Please connect a microphone.";
-                    break;
-                default:
-                    errorMsg = `Error: ${ev.error}. Please try again.`;
-            }
-            feedbackTextSpan.innerText = errorMsg;
+        recognition.onerror = () => {
+            feedbackTextSpan.innerText = "🎤 Could not hear you. Please speak clearly.";
             isListening = false;
             micBtn.classList.remove('mic-listening');
             micBtn.innerHTML = '<i class="fas fa-microphone"></i> Speak & Check';
@@ -956,11 +898,21 @@
                 isListening = false;
                 micBtn.classList.remove('mic-listening');
                 micBtn.innerHTML = '<i class="fas fa-microphone"></i> Speak & Check';
-                if (feedbackTextSpan.innerHTML.includes("Listening...")) {
-                    feedbackTextSpan.innerText = "No speech detected. Click 'Speak & Check' and say the word clearly.";
-                }
             }
         };
+        
+        try {
+            recognition.start();
+            isListening = true;
+            micBtn.classList.add('mic-listening');
+            micBtn.innerHTML = '<i class="fas fa-microphone-slash"></i> Listening...';
+            feedbackTextSpan.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Listening... speak now!';
+            scoreSpanDiv.innerHTML = "";
+            mistakeAnalysisDiv.innerHTML = "";
+        } catch (err) {
+            feedbackTextSpan.innerText = "⚠️ Please click again.";
+            isListening = false;
+        }
     }
 
     function setEnglishLevel(level) {
@@ -972,14 +924,17 @@
                 btn.classList.remove('active');
             }
         });
-        levelDesc.textContent = levelDescriptions[level] || levelDescriptions.A1;
+        levelDesc.textContent = level === "A1" ? "📘 A1: Basic words" :
+                                 level === "A2" ? "📙 A2: Everyday words" :
+                                 level === "B1" ? "📗 B1: Intermediate" :
+                                 level === "B2" ? "📕 B2: Upper-intermediate" :
+                                 level === "C1" ? "📖 C1: Advanced" : "🔮 C2: Mastery";
         
         if (currentMode === "random") {
             currentPracticeWord = getRandomWordByLevel();
             refreshDisplay();
-            // NO speech for level change - removed speakCalmly call
         }
-        feedbackTextSpan.innerText = `Level set to ${level}. Ready to practice!`;
+        feedbackTextSpan.innerText = `Level ${level}. Ready to practice!`;
     }
 
     function setMode(mode) {
@@ -990,41 +945,22 @@
             customPanel.style.display = "none";
             currentPracticeWord = getRandomWordByLevel();
             refreshDisplay();
-            feedbackTextSpan.innerText = "Random Practice mode active. Words from your selected level!";
-            // NO speech for mode change - removed speakCalmly call
+            feedbackTextSpan.innerText = "Random mode active!";
         } else {
             customModeBtn.classList.add("active");
             randomModeBtn.classList.remove("active");
             customPanel.style.display = "block";
-            
-            setTimeout(() => {
-                smoothScrollToElement(customSection, 'highlight');
-            }, 100);
-            
-            if (customWordsList.length === 0) {
-                customWordsList = ["apple", "beautiful", "determination"];
-                updateCustomBadges();
-            }
+            if (customWordsList.length === 0) customWordsList = ["apple", "beautiful"];
             currentPracticeWord = customWordsList[0];
             refreshDisplay();
-            feedbackTextSpan.innerText = "✨ Custom Practice mode! Add your own words below, then click 'Start Practice' to begin.";
+            setTimeout(() => customSection.scrollIntoView({ behavior: 'smooth' }), 100);
+            feedbackTextSpan.innerText = "Custom mode! Add your words below.";
         }
         scoreSpanDiv.innerHTML = "";
-    }
-
-    function initLevelButtons() {
-        const buttons = document.querySelectorAll('.level-btn');
-        buttons.forEach(btn => {
-            btn.addEventListener('click', () => {
-                const level = btn.getAttribute('data-level');
-                setEnglishLevel(level);
-            });
-        });
+        mistakeAnalysisDiv.innerHTML = "";
     }
 
     function init() {
-        initSpeechRecognition();
-        initLevelButtons();
         setEnglishLevel("A1");
         
         randomModeBtn.addEventListener('click', () => setMode("random"));
@@ -1036,12 +972,15 @@
         importListBtn.addEventListener('click', importFromTextArea);
         startCustomPracticeBtn.addEventListener('click', startCustomPractice);
         resetCustomListBtn.addEventListener('click', resetCustomList);
+        
+        document.querySelectorAll('.level-btn').forEach(btn => {
+            btn.addEventListener('click', () => setEnglishLevel(btn.getAttribute('data-level')));
+        });
+        
         updateCustomBadges();
         setMode("random");
         
-        setTimeout(() => {
-            speakCalmly("Welcome to Perfect Pronunciation", true);
-        }, 500);
+        setTimeout(() => speakCalmly("Welcome to Perfect Pronunciation", true), 500);
     }
 
     init();
