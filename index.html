@@ -274,7 +274,6 @@
 
         .custom-section.highlight {
             box-shadow: 0 0 0 3px #2c7da0, 0 0 0 6px rgba(44,125,160,0.2);
-            transition: box-shadow 0.3s ease;
         }
 
         .custom-header {
@@ -364,14 +363,6 @@
             gap: 6px;
         }
 
-        .word-count {
-            font-size: 0.75rem;
-            background: #eef2f7;
-            padding: 2px 8px;
-            border-radius: 20px;
-            margin-left: 8px;
-        }
-
         @keyframes gentlePop {
             0% { transform: scale(0.96); opacity: 0.7; }
             100% { transform: scale(1); opacity: 1; }
@@ -382,11 +373,6 @@
             50% { opacity: 0.5; }
         }
 
-        @keyframes highlightFlash {
-            0% { background-color: rgba(44,125,160,0.1); }
-            100% { background-color: transparent; }
-        }
-
         .animate-word {
             animation: gentlePop 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
         }
@@ -394,10 +380,6 @@
         .mic-listening {
             animation: pulse 1s infinite;
             background: #e67e22 !important;
-        }
-
-        .flash-highlight {
-            animation: highlightFlash 1s ease-out;
         }
 
         @media (max-width: 650px) {
@@ -544,7 +526,6 @@
         C2: "🔮 C2: Mastery level - sophisticated & nuanced language"
     };
 
-    // Smooth scroll to element
     function smoothScrollToElement(element) {
         element.scrollIntoView({
             behavior: 'smooth',
@@ -665,7 +646,6 @@
             customWordBadges.appendChild(badge);
         });
         
-        // Add word count indicator
         const countBadge = document.createElement('div');
         countBadge.style.marginTop = "8px";
         countBadge.style.fontSize = "0.75rem";
@@ -874,4 +854,80 @@
             refreshDisplay();
             speakCalmly(`Level ${level}. ${currentPracticeWord}`, true);
         }
-        feedbackTextSpan.innerText = `
+        feedbackTextSpan.innerText = `Level set to ${level}. Ready to practice!`;
+    }
+
+    function setMode(mode) {
+        currentMode = mode;
+        if (mode === "random") {
+            randomModeBtn.classList.add("active");
+            customModeBtn.classList.remove("active");
+            customPanel.style.display = "none";
+            currentPracticeWord = getRandomWordByLevel();
+            feedbackTextSpan.innerText = "Random Practice mode active. Words from your selected level!";
+        } else {
+            customModeBtn.classList.add("active");
+            randomModeBtn.classList.remove("active");
+            customPanel.style.display = "block";
+            
+            setTimeout(() => {
+                smoothScrollToElement(customSection);
+            }, 100);
+            
+            if (customWordsList.length === 0) {
+                customWordsList = ["apple", "beautiful", "determination"];
+                updateCustomBadges();
+            }
+            currentPracticeWord = customWordsList[0];
+            feedbackTextSpan.innerText = "✨ Custom Practice mode! Add your own words below and click 'Start Practice' to begin.";
+        }
+        refreshDisplay();
+        scoreSpanDiv.innerHTML = "";
+    }
+
+    function initLevelButtons() {
+        const buttons = document.querySelectorAll('.level-btn');
+        buttons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const level = btn.getAttribute('data-level');
+                setEnglishLevel(level);
+            });
+        });
+    }
+
+    function init() {
+        initSpeechRecognition();
+        initLevelButtons();
+        setEnglishLevel("A1");
+        
+        randomModeBtn.addEventListener('click', () => setMode("random"));
+        customModeBtn.addEventListener('click', () => setMode("custom"));
+        micBtn.addEventListener('click', startListening);
+        nextBtn.addEventListener('click', nextPractice);
+        listenGuidanceBtn.addEventListener('click', () => givePronunciationGuidance());
+        addWordBtn.addEventListener('click', addSingleWord);
+        importListBtn.addEventListener('click', importFromTextArea);
+        startCustomPracticeBtn.addEventListener('click', () => {
+            if (customWordsList.length) {
+                currentPracticeWord = customWordsList[Math.floor(Math.random() * customWordsList.length)];
+                refreshDisplay();
+                speakCalmly(`${currentPracticeWord}`, true);
+                feedbackTextSpan.innerText = `🎯 Now practicing: "${currentPracticeWord}". Click 'Speak & Check' to pronounce it!`;
+            } else {
+                feedbackTextSpan.innerText = "📝 Please add some words to your word bank first!";
+                smoothScrollToElement(customSection);
+            }
+        });
+        resetCustomListBtn.addEventListener('click', resetCustomList);
+        updateCustomBadges();
+        setMode("random");
+        
+        setTimeout(() => {
+            speakCalmly("Welcome to Perfect Pronunciation", true);
+        }, 500);
+    }
+
+    init();
+</script>
+</body>
+</html>
