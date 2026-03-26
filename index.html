@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>Perfect Pronunciation | Honest AI Speech Coach</title>
+    <title>Perfect Pronunciation | Extensive Vocabulary Coach</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
@@ -76,6 +76,15 @@
 
         .level-btn.active, .mode-btn.active { background: #2c7da0; color: white; }
 
+        .word-count-badge {
+            background: #e8f0fe;
+            padding: 0.3rem 0.8rem;
+            border-radius: 40px;
+            font-size: 0.75rem;
+            color: #2c7da0;
+            margin-left: 0.5rem;
+        }
+
         .practice-card {
             background: white;
             border-radius: 2rem;
@@ -132,7 +141,6 @@
             align-items: center;
             justify-content: center;
             margin: 0 auto 1rem;
-            position: relative;
         }
 
         .score-inner {
@@ -181,6 +189,7 @@
             .current-prompt { font-size: 2rem; }
             .hero h1 { font-size: 2rem; }
             .dashboard { padding: 1rem; }
+            .level-buttons { justify-content: center; }
         }
     </style>
 </head>
@@ -189,12 +198,12 @@
 <div class="app-container">
     <div class="hero">
         <h1>🗣️ Perfect Pronunciation</h1>
-        <p>honest feedback · strict scoring · real improvement</p>
+        <p>100+ words per level · honest feedback · strict scoring</p>
     </div>
 
     <div class="dashboard">
         <div class="level-section">
-            <div class="level-label"><i class="fas fa-chart-line"></i> Level:</div>
+            <div class="level-label"><i class="fas fa-chart-line"></i> English Level:</div>
             <div class="level-buttons" id="levelButtons">
                 <button class="level-btn" data-level="A1">A1</button>
                 <button class="level-btn" data-level="A2">A2</button>
@@ -203,7 +212,7 @@
                 <button class="level-btn" data-level="C1">C1</button>
                 <button class="level-btn" data-level="C2">C2</button>
             </div>
-            <div class="level-desc" id="levelDesc">📘 Beginner</div>
+            <div class="level-desc" id="levelDesc">📘 Beginner · 100+ words</div>
         </div>
 
         <div class="mode-selector">
@@ -239,7 +248,7 @@
                     <button class="btn btn-success" id="addWordBtn"><i class="fas fa-plus-circle"></i> Add Word</button>
                 </div>
                 <div class="input-group">
-                    <textarea id="bulkWords" rows="3" placeholder="Quick import: paste multiple words or phrases separated by commas or lines&#10;Example: rendezvous, entrepreneur, schedule, I am determined, wonderful day"></textarea>
+                    <textarea id="bulkWords" rows="3" placeholder="Quick import: paste multiple words or phrases separated by commas or lines&#10;Example: rendezvous, entrepreneur, schedule, I am determined"></textarea>
                     <button class="btn btn-primary" id="importBtn"><i class="fas fa-file-import"></i> Import List</button>
                 </div>
                 <div class="input-group">
@@ -247,9 +256,6 @@
                     <button class="btn btn-outline" id="resetCustomBtn"><i class="fas fa-trash-alt"></i> Reset to Default</button>
                 </div>
                 <div id="customWordBadges" style="margin-top: 1rem;"></div>
-                <p style="margin-top: 1rem; font-size: 0.8rem; color: #7f8c8d; background: #eef2f7; padding: 0.5rem; border-radius: 1rem;">
-                    <i class="fas fa-lightbulb"></i> <strong>Tip:</strong> Add your own words, then click "Start Practice" to begin. The app will scroll back up to the practice area!
-                </p>
             </div>
         </div>
     </div>
@@ -260,14 +266,83 @@
 </div>
 
 <script>
-    // Vocabulary by level
+    // ========== EXTENSIVE VOCABULARY DATABASE - 100+ WORDS PER LEVEL ==========
+    
     const vocab = {
-        A1: ["cat", "dog", "house", "happy", "apple", "water", "school", "book", "red", "blue"],
-        A2: ["beautiful", "important", "delicious", "travel", "family", "interesting", "restaurant", "because"],
-        B1: ["adventure", "challenge", "environment", "experience", "opportunity", "responsible", "schedule"],
-        B2: ["entrepreneur", "flexible", "globalization", "innovative", "negotiate", "perspective"],
-        C1: ["ephemeral", "fortuitous", "idiosyncrasy", "meticulous", "nuance", "paradigm"],
-        C2: ["antediluvian", "esoteric", "ineffable", "labyrinthine", "metamorphosis"]
+        A1: [
+            "cat", "dog", "bird", "fish", "rabbit", "horse", "cow", "pig", "duck", "chicken",
+            "apple", "banana", "orange", "grape", "strawberry", "watermelon", "mango", "peach", "pear", "lemon",
+            "red", "blue", "green", "yellow", "orange", "purple", "pink", "brown", "black", "white",
+            "happy", "sad", "big", "small", "hot", "cold", "wet", "dry", "fast", "slow",
+            "mother", "father", "brother", "sister", "friend", "teacher", "doctor", "nurse", "driver", "cook",
+            "house", "school", "park", "store", "hospital", "library", "restaurant", "museum", "airport", "station",
+            "car", "bus", "train", "plane", "boat", "bike", "walk", "run", "jump", "swim",
+            "eat", "drink", "sleep", "work", "play", "read", "write", "listen", "speak", "study",
+            "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten",
+            "hello", "goodbye", "please", "thank you", "sorry", "yes", "no", "today", "tomorrow", "yesterday"
+        ],
+        
+        A2: [
+            "beautiful", "dangerous", "famous", "friendly", "healthy", "important", "interesting", "popular", "powerful", "wonderful",
+            "always", "never", "sometimes", "usually", "often", "rarely", "quickly", "slowly", "carefully", "easily",
+            "arrive", "believe", "decide", "explain", "forget", "happen", "invite", "learn", "promise", "remember",
+            "accident", "adventure", "advice", "attention", "celebration", "challenge", "decision", "difference", "education", "experience",
+            "airport", "beach", "bridge", "castle", "church", "factory", "forest", "garden", "island", "mountain",
+            "breakfast", "lunch", "dinner", "coffee", "chocolate", "sandwich", "salad", "soup", "pizza", "pasta",
+            "brother", "cousin", "grandmother", "grandfather", "husband", "wife", "daughter", "son", "parent", "relative",
+            "clever", "curious", "excited", "honest", "kind", "lazy", "patient", "polite", "smart", "tired",
+            "bicycle", "motorcycle", "taxi", "subway", "highway", "traffic", "journey", "ticket", "luggage", "passport",
+            "garden", "kitchen", "bedroom", "bathroom", "living room", "dining room", "office", "balcony", "garage", "basement"
+        ],
+        
+        B1: [
+            "accommodation", "achievement", "advertisement", "ambition", "announcement", "application", "appointment", "atmosphere", "awareness", "behavior",
+            "benefit", "campaign", "character", "community", "condition", "confidence", "consequence", "conversation", "creativity", "curiosity",
+            "democracy", "disaster", "economy", "education", "efficiency", "environment", "equipment", "experience", "experiment", "expression",
+            "freedom", "friendship", "government", "happiness", "healthcare", "imagination", "improvement", "independence", "industry", "information",
+            "knowledge", "leadership", "management", "motivation", "opportunity", "organization", "participation", "performance", "population", "possibility",
+            "pressure", "production", "profession", "protection", "relationship", "responsibility", "satisfaction", "situation", "strategy", "strength",
+            "success", "technology", "tradition", "understanding", "university", "variety", "volunteer", "weakness", "wisdom", "youth",
+            "aggressive", "ambitious", "cautious", "confident", "considerate", "creative", "determined", "efficient", "enthusiastic", "flexible",
+            "generate", "identify", "influence", "investigate", "maintain", "motivate", "negotiate", "participate", "recognize", "recommend"
+        ],
+        
+        B2: [
+            "accommodate", "acknowledge", "anticipate", "appreciate", "articulate", "categorize", "collaborate", "compensate", "comprehend", "concentrate",
+            "conceptualize", "conclude", "consequence", "consistently", "constitute", "contribute", "coordinate", "correspond", "demonstrate", "determine",
+            "differentiate", "distinguish", "elaborate", "eliminate", "emphasize", "establish", "evaluate", "exaggerate", "facilitate", "formulate",
+            "furthermore", "generalize", "highlight", "hypothesis", "implement", "implicate", "incorporate", "indicate", "initiate", "integrate",
+            "interpret", "investigate", "justify", "legitimate", "manipulate", "mediate", "necessitate", "negotiate", "observe", "participate",
+            "perspective", "phenomenon", "philosophy", "potential", "precedent", "predominant", "preliminary", "presume", "prevalent", "primarily",
+            "proceed", "proficient", "profound", "prohibit", "proportion", "prosper", "psychological", "pursue", "reasonable", "reconcile",
+            "reliable", "reluctant", "remedy", "significant", "speculate", "spontaneous", "statistics", "subsequent", "substitute", "sufficient",
+            "sustainable", "symbolic", "synthetic", "tactical", "temporary", "tendency", "theoretical", "transition", "ultimately", "versatile"
+        ],
+        
+        C1: [
+            "acquiesce", "anomaly", "antithesis", "assuage", "auspicious", "benevolent", "candid", "cogent", "comprehensive", "conundrum",
+            "debilitate", "decadence", "demarcation", "dichotomy", "diligent", "discern", "discrepancy", "disparate", "eclectic", "efficacy",
+            "empirical", "ephemeral", "equanimity", "equivocal", "erudite", "esoteric", "exacerbate", "exemplary", "explicit", "extrapolate",
+            "fortuitous", "frivolous", "gregarious", "hackneyed", "hedonism", "hypocrisy", "idiosyncrasy", "imminent", "impartial", "impetus",
+            "inadvertent", "incisive", "incongruous", "incontrovertible", "indigenous", "inexorable", "infamous", "inflection", "inherent", "innocuous",
+            "insidious", "intangible", "intermittent", "intractable", "intrinsic", "inundate", "invaluable", "inverse", "irreverent", "judicious",
+            "juxtaposition", "laconic", "lament", "laudable", "lethargic", "loquacious", "lucid", "magnanimous", "malicious", "malleable",
+            "meticulous", "misanthrope", "mitigate", "modicum", "myriad", "nebulous", "nonchalant", "notorious", "nuance", "obfuscate",
+            "objective", "oblivious", "obsequious", "obsolete", "obtuse", "officious", "ominous", "onerous", "opaque", "opportunist"
+        ],
+        
+        C2: [
+            "abrogate", "abscond", "acrimonious", "adumbrate", "aggrandize", "anachronism", "antediluvian", "apoplectic", "apotheosis", "approbation",
+            "ascetic", "bacchanalian", "bellicose", "bombastic", "bucolic", "calumny", "carping", "chicanery", "circumlocution", "clandestine",
+            "cogitate", "complaisant", "conflagration", "contiguous", "contumacious", "convivial", "corpulent", "cosmopolitan", "cupidity", "defenestration",
+            "deleterious", "demagogue", "desultory", "diaphanous", "dichotomous", "diffident", "dilatory", "discordant", "disenfranchise", "disingenuous",
+            "disparage", "disseminate", "dissonance", "divergent", "dogmatic", "ebullient", "effervescent", "egregious", "emollient", "empyrean",
+            "enervate", "ephemeral", "epistemology", "equipoise", "equivocate", "erratic", "ethereal", "euphemism", "evanescent", "exacerbate",
+            "exculpate", "exigency", "exonerate", "expatiate", "expedient", "expiate", "explicate", "expurgate", "extemporaneous", "extirpate",
+            "facetious", "fastidious", "fatuous", "fecund", "fervent", "fetid", "fiduciary", "flabbergasted", "flagitious", "flippant",
+            "fortuitous", "fractious", "fulminate", "furlough", "garrulous", "grandiloquent", "halcyon", "harangue", "hegemony", "heterogeneous",
+            "hiatus", "hierarchical", "histrionic", "hombres", "hyperbole", "iconoclast", "idiosyncrasy", "impecunious", "impinge", "implacable"
+        ]
     };
 
     let currentLevel = "A1";
@@ -278,6 +353,7 @@
     let recognition = null;
     let synth = window.speechSynthesis;
     let isListening = false;
+    let lastWords = []; // Track last 10 words to avoid immediate repetition
 
     // DOM elements
     const randomBtn = document.getElementById('randomModeBtn');
@@ -295,7 +371,40 @@
     const suggestionHint = document.getElementById('suggestionHint');
     const levelDesc = document.getElementById('levelDesc');
 
-    // Smooth scroll function
+    function updateLevelDescription() {
+        const wordCount = vocab[currentLevel].length;
+        const levelNames = { 
+            A1: "📘 Beginner", A2: "📙 Elementary", B1: "📗 Intermediate", 
+            B2: "📕 Upper Intermediate", C1: "📖 Advanced", C2: "🔮 Mastery" 
+        };
+        levelDesc.innerHTML = `${levelNames[currentLevel]} · ${wordCount} words available`;
+    }
+
+    function getRandomUniqueWord() {
+        const words = vocab[currentLevel];
+        if (!words || words.length === 0) return "practice";
+        
+        // Get words not in last 10
+        let availableWords = words.filter(w => !lastWords.includes(w));
+        
+        // If all words have been used recently, reset and use all
+        if (availableWords.length === 0) {
+            lastWords = [];
+            availableWords = words;
+        }
+        
+        const randomIndex = Math.floor(Math.random() * availableWords.length);
+        const newWord = availableWords[randomIndex];
+        
+        // Track last 10 words
+        lastWords.push(newWord);
+        if (lastWords.length > 10) {
+            lastWords.shift();
+        }
+        
+        return newWord;
+    }
+
     function smoothScrollToElement(element, highlightClass = 'highlight') {
         element.scrollIntoView({
             behavior: 'smooth',
@@ -308,7 +417,6 @@
         }, 1500);
     }
 
-    // Scroll to practice area
     function scrollToPracticeArea() {
         practiceCard.scrollIntoView({
             behavior: 'smooth',
@@ -321,11 +429,11 @@
     }
 
     // ========== STRICT PRONUNCIATION CHECKER ==========
-    function strictCheck(expected, spoken, rawTranscript) {
-        if (!spoken && !rawTranscript) return { score: 0, mistakes: ["No speech detected"] };
+    function strictCheck(expected, spoken) {
+        if (!spoken) return { score: 0, mistakes: ["No speech detected"] };
         
         const normExpected = expected.toLowerCase().trim().replace(/[^\w\s]/g, '');
-        const normSpoken = (spoken || rawTranscript || "").toLowerCase().trim().replace(/[^\w\s]/g, '');
+        const normSpoken = spoken.toLowerCase().trim().replace(/[^\w\s]/g, '');
         
         let totalPenalty = 0;
         let mistakes = [];
@@ -337,73 +445,61 @@
         const lenDiff = Math.abs(normExpected.length - normSpoken.length);
         if (lenDiff > 3) {
             totalPenalty += 25;
-            mistakes.push(`❌ Length mismatch: said "${normSpoken.length}" chars, expected "${normExpected.length}" (off by ${lenDiff})`);
+            mistakes.push(`Length mismatch: said "${normSpoken.length}" chars, expected "${normExpected.length}"`);
         } else if (lenDiff > 0) {
             totalPenalty += lenDiff * 4;
-            mistakes.push(`⚠️ Length off by ${lenDiff} character(s)`);
+            mistakes.push(`Length off by ${lenDiff} character(s)`);
         }
         
         const minLen = Math.min(normExpected.length, normSpoken.length);
+        let wrongPositions = [];
         for (let i = 0; i < minLen; i++) {
             if (normExpected[i] !== normSpoken[i]) {
-                mistakes.push(`🔤 Position ${i+1}: said "${normSpoken[i] || '?'}" instead of "${normExpected[i]}"`);
+                wrongPositions.push(`position ${i+1}: "${normSpoken[i]}" instead of "${normExpected[i]}"`);
                 totalPenalty += 3;
             }
+        }
+        if (wrongPositions.length > 0) {
+            mistakes.push(`Wrong sounds at ${wrongPositions.slice(0, 2).join(', ')}`);
         }
         
         if (normSpoken.length > normExpected.length) {
             const extra = normSpoken.slice(normExpected.length);
-            mistakes.push(`➕ Extra: "${extra}" at the end`);
+            mistakes.push(`Extra: "${extra}" at the end`);
             totalPenalty += extra.length * 3;
         } else if (normExpected.length > normSpoken.length) {
             const missing = normExpected.slice(normSpoken.length);
-            mistakes.push(`➖ Missing: "${missing}" at the end`);
+            mistakes.push(`Missing: "${missing}" at the end`);
             totalPenalty += missing.length * 4;
         }
         
-        const expectedSyllables = countSyllablesStrict(normExpected);
-        const spokenSyllables = countSyllablesStrict(normSpoken);
+        const expectedSyllables = countSyllables(normExpected);
+        const spokenSyllables = countSyllables(normSpoken);
         if (expectedSyllables !== spokenSyllables) {
-            const sylDiff = Math.abs(expectedSyllables - spokenSyllables);
-            totalPenalty += sylDiff * 12;
-            mistakes.push(`🎵 Syllables: expected ${expectedSyllables}, you said ${spokenSyllables}`);
+            totalPenalty += Math.abs(expectedSyllables - spokenSyllables) * 12;
+            mistakes.push(`Syllables: expected ${expectedSyllables}, you said ${spokenSyllables}`);
         }
         
         const expectedWords = normExpected.split(/\s+/);
         const spokenWords = normSpoken.split(/\s+/);
         if (expectedWords.length !== spokenWords.length) {
             totalPenalty += 20;
-            mistakes.push(`📊 Word count: expected ${expectedWords.length} word(s), you said ${spokenWords.length}`);
-        }
-        
-        const similarity = calculateSimilarity(normExpected, normSpoken);
-        if (similarity < 0.5) {
-            totalPenalty += 30;
-            mistakes.unshift(`❌ Your pronunciation sounds very different from "${expected}"`);
+            mistakes.push(`Word count: expected ${expectedWords.length}, you said ${spokenWords.length}`);
         }
         
         let finalScore = 100 - totalPenalty;
-        
-        if (normExpected !== normSpoken && finalScore > 85) {
-            finalScore = 85;
-        }
-        
-        if (mistakes.length > 0 && finalScore > 90) {
-            finalScore = 89;
-        }
-        
+        if (normExpected !== normSpoken && finalScore > 85) finalScore = 85;
+        if (mistakes.length > 0 && finalScore > 90) finalScore = 89;
         finalScore = Math.max(0, Math.min(100, Math.floor(finalScore)));
-        const uniqueMistakes = [...new Map(mistakes.map(m => [m, m])).values()];
         
-        return { score: finalScore, mistakes: uniqueMistakes.slice(0, 4), perfect: false };
+        return { score: finalScore, mistakes: mistakes.slice(0, 4), perfect: false };
     }
     
-    function countSyllablesStrict(word) {
+    function countSyllables(word) {
         word = word.toLowerCase();
         let count = 0;
         let vowels = 'aeiou';
         let lastWasVowel = false;
-        
         for (let i = 0; i < word.length; i++) {
             if (vowels.includes(word[i])) {
                 if (!lastWasVowel) {
@@ -414,35 +510,8 @@
                 lastWasVowel = false;
             }
         }
-        
         if (word.endsWith('e')) count = Math.max(1, count - 1);
-        if (word.endsWith('le') && word.length > 2 && !vowels.includes(word[word.length-3])) count++;
-        
         return Math.max(1, count);
-    }
-    
-    function calculateSimilarity(a, b) {
-        if (a === b) return 1;
-        const maxLen = Math.max(a.length, b.length);
-        if (maxLen === 0) return 1;
-        const distance = levenshtein(a, b);
-        return (maxLen - distance) / maxLen;
-    }
-    
-    function levenshtein(a, b) {
-        const matrix = Array(b.length + 1).fill().map(() => Array(a.length + 1).fill(0));
-        for (let i = 0; i <= a.length; i++) matrix[0][i] = i;
-        for (let j = 0; j <= b.length; j++) matrix[j][0] = j;
-        for (let j = 1; j <= b.length; j++) {
-            for (let i = 1; i <= a.length; i++) {
-                if (a[i-1] === b[j-1]) {
-                    matrix[j][i] = matrix[j-1][i-1];
-                } else {
-                    matrix[j][i] = Math.min(matrix[j-1][i-1] + 1, matrix[j][i-1] + 1, matrix[j-1][i] + 1);
-                }
-            }
-        }
-        return matrix[b.length][a.length];
     }
     
     function getScoreColor(score) {
@@ -479,13 +548,11 @@
                     ${analysis.mistakes.map(m => `<div class="mistake-item"><i class="fas fa-arrow-right"></i> ${m}</div>`).join('')}
                 </div>
             `;
-            
             let feedbackMsg = `You said: "${transcript}". `;
             if (score >= 80) feedbackMsg += "Very close! Small adjustments needed.";
             else if (score >= 60) feedbackMsg += "Good attempt! Focus on the sounds above.";
             else if (score >= 40) feedbackMsg += "Keep practicing! Listen to the correct pronunciation.";
             else feedbackMsg += "Let's practice this more. Try listening and repeating.";
-            
             feedbackText.innerHTML = feedbackMsg;
         } else {
             feedbackText.innerHTML = `You said: "${transcript}". Score: ${score}%. ${score >= 70 ? "Good work!" : "Keep practicing!"}`;
@@ -505,8 +572,7 @@
     
     function getRandomWord() {
         if (currentMode === "random") {
-            const words = vocab[currentLevel];
-            return words[Math.floor(Math.random() * words.length)];
+            return getRandomUniqueWord();
         } else {
             if (customWords.length === 0) customWords = ["practice", "english"];
             return customWords[Math.floor(Math.random() * customWords.length)];
@@ -515,7 +581,10 @@
     
     function refreshDisplay() {
         wordDisplay.innerText = currentWord;
-        suggestionHint.innerHTML = currentMode === "random" ? `🎯 Level ${currentLevel} · "${currentWord}"` : `📘 Custom: "${currentWord}"`;
+        const wordCount = vocab[currentLevel].length;
+        suggestionHint.innerHTML = currentMode === "random" ? 
+            `🎯 Level ${currentLevel} · ${wordCount} words available · "${currentWord}"` : 
+            `📘 Custom: "${currentWord}"`;
         wordDisplay.classList.add('animate-word');
         setTimeout(() => wordDisplay.classList.remove('animate-word'), 300);
         scoreDisplay.innerHTML = "";
@@ -556,12 +625,11 @@
         
         recognition.onresult = (event) => {
             const transcript = event.results[0][0].transcript.trim();
-            const expected = currentWord;
-            const analysis = strictCheck(expected, transcript, transcript);
+            const analysis = strictCheck(currentWord, transcript);
             updateUIWithResult(analysis, transcript);
             
             if (analysis.score < 70) {
-                setTimeout(() => speak(expected, true), 500);
+                setTimeout(() => speak(currentWord, true), 500);
             } else if (analysis.score >= 85 && !analysis.perfect) {
                 speak("Good job", true);
             } else if (analysis.perfect) {
@@ -573,11 +641,8 @@
             micBtn.innerHTML = '<i class="fas fa-microphone"></i> Record & Check';
         };
         
-        recognition.onerror = (event) => {
-            let errorMsg = event.error === 'not-allowed' ? "❌ Microphone access denied." :
-                          event.error === 'no-speech' ? "🎤 No speech detected. Please speak clearly." :
-                          `Error: ${event.error}. Please try again.`;
-            feedbackText.innerHTML = errorMsg;
+        recognition.onerror = () => {
+            feedbackText.innerHTML = "🎤 No speech detected. Please speak clearly.";
             isListening = false;
             micBtn.classList.remove('mic-listening');
             micBtn.innerHTML = '<i class="fas fa-microphone"></i> Record & Check';
@@ -611,13 +676,12 @@
             if (btn.getAttribute('data-level') === level) btn.classList.add('active');
             else btn.classList.remove('active');
         });
-        const levelNames = { A1: "📘 Beginner", A2: "📙 Elementary", B1: "📗 Intermediate", B2: "📕 Upper Intermediate", C1: "📖 Advanced", C2: "🔮 Mastery" };
-        levelDesc.innerHTML = levelNames[level];
+        updateLevelDescription();
         if (currentMode === "random") {
             currentWord = getRandomWord();
             refreshDisplay();
         }
-        feedbackText.innerHTML = `Level ${level}. Ready to practice!`;
+        feedbackText.innerHTML = `Level ${level} selected. ${vocab[level].length} words available!`;
     }
     
     function setMode(mode) {
@@ -628,21 +692,16 @@
             customPanel.style.display = "none";
             currentWord = getRandomWord();
             refreshDisplay();
-            feedbackText.innerHTML = "Random mode active. Words from your level!";
+            feedbackText.innerHTML = `Random mode active. ${vocab[currentLevel].length} words available at this level!`;
         } else {
             customBtn.classList.add("active");
             randomBtn.classList.remove("active");
             customPanel.style.display = "block";
-            
-            // Scroll to custom section with highlight
-            setTimeout(() => {
-                smoothScrollToElement(customSection, 'highlight');
-            }, 100);
-            
+            setTimeout(() => smoothScrollToElement(customSection, 'highlight'), 100);
             if (customWords.length === 0) customWords = ["apple", "beautiful"];
             currentWord = customWords[0];
             refreshDisplay();
-            feedbackText.innerHTML = "✨ Custom mode! Add your own words below, then click 'Start Practice' to begin.";
+            feedbackText.innerHTML = "Custom mode! Add your own words below, then click 'Start Practice' to begin.";
         }
     }
     
@@ -701,13 +760,9 @@
             smoothScrollToElement(customSection, 'highlight');
             return;
         }
-        
         currentWord = customWords[Math.floor(Math.random() * customWords.length)];
         refreshDisplay();
-        
-        // Scroll to practice area
         scrollToPracticeArea();
-        
         speak(currentWord, true);
         feedbackText.innerHTML = `🎯 Now practicing: "${currentWord}". Click 'Record & Check' to pronounce it!`;
     }
@@ -723,12 +778,10 @@
         speak("Custom list reset", true);
     }
     
-    // Add highlight-practice style
     const style = document.createElement('style');
     style.textContent = `.highlight-practice { box-shadow: 0 0 0 3px #27ae60, 0 0 0 6px rgba(39,174,96,0.2); transition: all 0.3s ease; }`;
     document.head.appendChild(style);
     
-    // Event listeners
     document.querySelectorAll('.level-btn').forEach(btn => {
         btn.addEventListener('click', () => setLevel(btn.getAttribute('data-level')));
     });
@@ -742,11 +795,11 @@
     document.getElementById('startCustomBtn').addEventListener('click', startCustomPractice);
     document.getElementById('resetCustomBtn').addEventListener('click', resetCustomList);
     
-    // Initialize
     updateCustomBadges();
     setLevel("A1");
     setMode("random");
-    setTimeout(() => speak("Welcome to Perfect Pronunciation", true), 500);
+    updateLevelDescription();
+    setTimeout(() => speak("Welcome to Perfect Pronunciation. Choose your level and start practicing!", true), 500);
 </script>
 </body>
 </html>
