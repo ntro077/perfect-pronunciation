@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>Perfect Pronunciation | Accurate Pronunciation Coach</title>
+    <title>Perfect Pronunciation | Honest AI Speech Coach</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
@@ -60,7 +60,8 @@
             box-shadow: 0 5px 15px rgba(0,0,0,0.05);
         }
 
-        .level-label, .level-buttons, .mode-selector { display: flex; flex-wrap: wrap; gap: 0.6rem; align-items: center; }
+        .level-label, .level-buttons { display: flex; flex-wrap: wrap; gap: 0.6rem; align-items: center; }
+        .mode-selector { justify-content: center; gap: 1.2rem; }
 
         .level-btn, .mode-btn {
             background: #eef2f7;
@@ -81,6 +82,7 @@
             padding: 2rem;
             margin-bottom: 2rem;
             box-shadow: 0 15px 30px -10px rgba(0,0,0,0.1);
+            scroll-margin-top: 80px;
         }
 
         .word-area { text-align: center; margin-bottom: 2rem; }
@@ -147,13 +149,19 @@
         .score-number { font-size: 2.5rem; font-weight: 800; }
         .mistake-list { margin-top: 1rem; padding: 1rem; background: #fff3e0; border-radius: 1rem; border-left: 4px solid #e67e22; }
         .mistake-item { padding: 0.3rem 0; font-size: 0.9rem; display: flex; align-items: center; gap: 8px; }
-        .perfect-badge { background: #27ae60; color: white; padding: 0.5rem 1rem; border-radius: 40px; display: inline-block; }
 
         .custom-section {
             background: #f8fafd;
             border-radius: 1.5rem;
             padding: 1.5rem;
             margin-top: 1rem;
+            scroll-margin-top: 80px;
+            transition: all 0.3s ease;
+        }
+
+        .custom-section.highlight {
+            box-shadow: 0 0 0 3px #2c7da0, 0 0 0 6px rgba(44,125,160,0.2);
+            background: #ffffff;
         }
 
         .input-group { display: flex; flex-wrap: wrap; gap: 0.8rem; margin-bottom: 1rem; }
@@ -188,16 +196,19 @@
         <div class="level-section">
             <div class="level-label"><i class="fas fa-chart-line"></i> Level:</div>
             <div class="level-buttons" id="levelButtons">
-                <button class="level-btn" data-level="A1">A1</button><button class="level-btn" data-level="A2">A2</button>
-                <button class="level-btn" data-level="B1">B1</button><button class="level-btn" data-level="B2">B2</button>
-                <button class="level-btn" data-level="C1">C1</button><button class="level-btn" data-level="C2">C2</button>
+                <button class="level-btn" data-level="A1">A1</button>
+                <button class="level-btn" data-level="A2">A2</button>
+                <button class="level-btn" data-level="B1">B1</button>
+                <button class="level-btn" data-level="B2">B2</button>
+                <button class="level-btn" data-level="C1">C1</button>
+                <button class="level-btn" data-level="C2">C2</button>
             </div>
             <div class="level-desc" id="levelDesc">📘 Beginner</div>
         </div>
 
         <div class="mode-selector">
-            <button class="mode-btn" id="randomModeBtn"><i class="fas fa-shuffle"></i> Random</button>
-            <button class="mode-btn" id="customModeBtn"><i class="fas fa-pen-fancy"></i> Custom</button>
+            <button class="mode-btn" id="randomModeBtn"><i class="fas fa-shuffle"></i> Random Practice</button>
+            <button class="mode-btn" id="customModeBtn"><i class="fas fa-pen-fancy"></i> Custom Practice</button>
         </div>
 
         <div class="practice-card">
@@ -218,27 +229,33 @@
         </div>
 
         <div id="customPanel" style="display: none;">
-            <div class="custom-section">
-                <h3><i class="fas fa-edit"></i> Your Words</h3>
+            <div class="custom-section" id="customSection">
+                <h3><i class="fas fa-edit"></i> Your Personal Word Bank</h3>
+                <p style="color: #5f7f9a; margin-bottom: 1rem; font-size: 0.9rem;">
+                    <i class="fas fa-info-circle"></i> Add your own words or phrases to practice
+                </p>
                 <div class="input-group">
-                    <input type="text" id="singleWordInput" placeholder="Add a word or phrase">
-                    <button class="btn btn-success" id="addWordBtn">+ Add</button>
+                    <input type="text" id="singleWordInput" placeholder="Add a word or phrase (e.g., 'beautiful' or 'I love English')">
+                    <button class="btn btn-success" id="addWordBtn"><i class="fas fa-plus-circle"></i> Add Word</button>
                 </div>
                 <div class="input-group">
-                    <textarea id="bulkWords" rows="2" placeholder="Paste multiple words separated by commas&#10;Example: beautiful, entrepreneur, I love English"></textarea>
-                    <button class="btn btn-primary" id="importBtn">Import</button>
+                    <textarea id="bulkWords" rows="3" placeholder="Quick import: paste multiple words or phrases separated by commas or lines&#10;Example: rendezvous, entrepreneur, schedule, I am determined, wonderful day"></textarea>
+                    <button class="btn btn-primary" id="importBtn"><i class="fas fa-file-import"></i> Import List</button>
                 </div>
                 <div class="input-group">
                     <button class="btn btn-success" id="startCustomBtn"><i class="fas fa-play"></i> Start Practice</button>
-                    <button class="btn btn-outline" id="resetCustomBtn">Reset</button>
+                    <button class="btn btn-outline" id="resetCustomBtn"><i class="fas fa-trash-alt"></i> Reset to Default</button>
                 </div>
                 <div id="customWordBadges" style="margin-top: 1rem;"></div>
+                <p style="margin-top: 1rem; font-size: 0.8rem; color: #7f8c8d; background: #eef2f7; padding: 0.5rem; border-radius: 1rem;">
+                    <i class="fas fa-lightbulb"></i> <strong>Tip:</strong> Add your own words, then click "Start Practice" to begin. The app will scroll back up to the practice area!
+                </p>
             </div>
         </div>
     </div>
     <div class="footer-credit">
         made by englishteacher rush &nbsp;|&nbsp; 
-        <a href="https://ntro077.github.io/my-teaching-site/" target="_blank">visit my website</a>
+        <a href="https://ntro077.github.io/my-teaching-site/" target="_blank"><i class="fas fa-globe"></i> visit my website</a>
     </div>
 </div>
 
@@ -256,7 +273,7 @@
     let currentLevel = "A1";
     let currentMode = "random";
     let currentWord = "cat";
-    let customWords = ["apple", "beautiful", "challenge"];
+    let customWords = ["apple", "beautiful", "challenge", "serendipity", "I appreciate it"];
     
     let recognition = null;
     let synth = window.speechSynthesis;
@@ -266,6 +283,8 @@
     const randomBtn = document.getElementById('randomModeBtn');
     const customBtn = document.getElementById('customModeBtn');
     const customPanel = document.getElementById('customPanel');
+    const customSection = document.getElementById('customSection');
+    const practiceCard = document.querySelector('.practice-card');
     const wordDisplay = document.getElementById('currentPromptDisplay');
     const micBtn = document.getElementById('micBtn');
     const nextBtn = document.getElementById('nextBtn');
@@ -276,25 +295,45 @@
     const suggestionHint = document.getElementById('suggestionHint');
     const levelDesc = document.getElementById('levelDesc');
 
-    // ========== ULTRA STRICT PRONUNCIATION CHECKER ==========
-    // This doesn't rely on the transcript being perfect - it does multiple layers of checking
-    
+    // Smooth scroll function
+    function smoothScrollToElement(element, highlightClass = 'highlight') {
+        element.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start',
+            inline: 'nearest'
+        });
+        element.classList.add(highlightClass);
+        setTimeout(() => {
+            element.classList.remove(highlightClass);
+        }, 1500);
+    }
+
+    // Scroll to practice area
+    function scrollToPracticeArea() {
+        practiceCard.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+        });
+        practiceCard.classList.add('highlight-practice');
+        setTimeout(() => {
+            practiceCard.classList.remove('highlight-practice');
+        }, 1500);
+    }
+
+    // ========== STRICT PRONUNCIATION CHECKER ==========
     function strictCheck(expected, spoken, rawTranscript) {
         if (!spoken && !rawTranscript) return { score: 0, mistakes: ["No speech detected"] };
         
         const normExpected = expected.toLowerCase().trim().replace(/[^\w\s]/g, '');
         const normSpoken = (spoken || rawTranscript || "").toLowerCase().trim().replace(/[^\w\s]/g, '');
         
-        // START WITH ZERO - only earn points by matching perfectly
         let totalPenalty = 0;
         let mistakes = [];
         
-        // 1. EXACT CHARACTER MATCH - only way to get high score
         if (normExpected === normSpoken) {
             return { score: 100, mistakes: [], perfect: true };
         }
         
-        // 2. Check if they're even close in length
         const lenDiff = Math.abs(normExpected.length - normSpoken.length);
         if (lenDiff > 3) {
             totalPenalty += 25;
@@ -304,19 +343,14 @@
             mistakes.push(`⚠️ Length off by ${lenDiff} character(s)`);
         }
         
-        // 3. Character-by-character comparison with position tracking
-        let correctChars = 0;
         const minLen = Math.min(normExpected.length, normSpoken.length);
         for (let i = 0; i < minLen; i++) {
-            if (normExpected[i] === normSpoken[i]) {
-                correctChars++;
-            } else {
+            if (normExpected[i] !== normSpoken[i]) {
                 mistakes.push(`🔤 Position ${i+1}: said "${normSpoken[i] || '?'}" instead of "${normExpected[i]}"`);
                 totalPenalty += 3;
             }
         }
         
-        // 4. Missing or extra characters at the end
         if (normSpoken.length > normExpected.length) {
             const extra = normSpoken.slice(normExpected.length);
             mistakes.push(`➕ Extra: "${extra}" at the end`);
@@ -327,16 +361,14 @@
             totalPenalty += missing.length * 4;
         }
         
-        // 5. Syllable check - VERY strict
         const expectedSyllables = countSyllablesStrict(normExpected);
         const spokenSyllables = countSyllablesStrict(normSpoken);
         if (expectedSyllables !== spokenSyllables) {
             const sylDiff = Math.abs(expectedSyllables - spokenSyllables);
             totalPenalty += sylDiff * 12;
-            mistakes.push(`🎵 Syllables: expected ${expectedSyllables}, you said ${spokenSyllables} (${sylDiff} off)`);
+            mistakes.push(`🎵 Syllables: expected ${expectedSyllables}, you said ${spokenSyllables}`);
         }
         
-        // 6. Word count for phrases
         const expectedWords = normExpected.split(/\s+/);
         const spokenWords = normSpoken.split(/\s+/);
         if (expectedWords.length !== spokenWords.length) {
@@ -344,29 +376,23 @@
             mistakes.push(`📊 Word count: expected ${expectedWords.length} word(s), you said ${spokenWords.length}`);
         }
         
-        // 7. Check if the spoken word is completely different
         const similarity = calculateSimilarity(normExpected, normSpoken);
         if (similarity < 0.5) {
             totalPenalty += 30;
             mistakes.unshift(`❌ Your pronunciation sounds very different from "${expected}"`);
         }
         
-        // Calculate final score - start from 100, subtract penalties
         let finalScore = 100 - totalPenalty;
         
-        // Hard cap: can't get above 85% if not exact match
         if (normExpected !== normSpoken && finalScore > 85) {
             finalScore = 85;
         }
         
-        // If there are any mistakes, can't get above 90%
         if (mistakes.length > 0 && finalScore > 90) {
             finalScore = 89;
         }
         
         finalScore = Math.max(0, Math.min(100, Math.floor(finalScore)));
-        
-        // Remove duplicate mistakes
         const uniqueMistakes = [...new Map(mistakes.map(m => [m, m])).values()];
         
         return { score: finalScore, mistakes: uniqueMistakes.slice(0, 4), perfect: false };
@@ -429,9 +455,8 @@
     function updateUIWithResult(analysis, transcript) {
         const score = analysis.score;
         const color = getScoreColor(score);
-        
-        // Create circular score display
         const rotation = (score / 100) * 360;
+        
         scoreDisplay.innerHTML = `
             <div class="score-circle" style="background: conic-gradient(${color} ${rotation}deg, #eef2f7 ${rotation}deg)">
                 <div class="score-inner">
@@ -441,7 +466,6 @@
             </div>
         `;
         
-        // Show mistakes
         if (analysis.perfect) {
             mistakeDisplay.innerHTML = `<div style="background: #e8f5e9; padding: 1rem; border-radius: 1rem; text-align: center;">
                 <i class="fas fa-trophy" style="color: #27ae60; font-size: 1.5rem;"></i>
@@ -469,7 +493,6 @@
         }
     }
     
-    // Helper functions
     function speak(text, cancel = true) {
         if (!synth) return;
         if (cancel) synth.cancel();
@@ -506,11 +529,10 @@
         refreshDisplay();
     }
     
-    // Speech recognition setup
     function initRecognition() {
         const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
         if (!SpeechRecognition) {
-            feedbackText.innerHTML = "❌ Speech recognition not supported in this browser. Try Chrome.";
+            feedbackText.innerHTML = "❌ Speech recognition not supported. Try Chrome.";
             return false;
         }
         recognition = new SpeechRecognition();
@@ -522,10 +544,8 @@
     
     async function startRecording() {
         if (isListening) return;
-        
         if (!recognition && !initRecognition()) return;
         
-        // Request microphone permission
         try {
             const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
             stream.getTracks().forEach(track => track.stop());
@@ -537,12 +557,9 @@
         recognition.onresult = (event) => {
             const transcript = event.results[0][0].transcript.trim();
             const expected = currentWord;
-            
-            // Run the strict check
             const analysis = strictCheck(expected, transcript, transcript);
             updateUIWithResult(analysis, transcript);
             
-            // Provide voice feedback for low scores
             if (analysis.score < 70) {
                 setTimeout(() => speak(expected, true), 500);
             } else if (analysis.score >= 85 && !analysis.perfect) {
@@ -557,10 +574,9 @@
         };
         
         recognition.onerror = (event) => {
-            let errorMsg = "";
-            if (event.error === 'not-allowed') errorMsg = "❌ Microphone access denied.";
-            else if (event.error === 'no-speech') errorMsg = "🎤 No speech detected. Please speak clearly.";
-            else errorMsg = `Error: ${event.error}. Please try again.`;
+            let errorMsg = event.error === 'not-allowed' ? "❌ Microphone access denied." :
+                          event.error === 'no-speech' ? "🎤 No speech detected. Please speak clearly." :
+                          `Error: ${event.error}. Please try again.`;
             feedbackText.innerHTML = errorMsg;
             isListening = false;
             micBtn.classList.remove('mic-listening');
@@ -589,7 +605,6 @@
         }
     }
     
-    // UI functions
     function setLevel(level) {
         currentLevel = level;
         document.querySelectorAll('.level-btn').forEach(btn => {
@@ -618,10 +633,16 @@
             customBtn.classList.add("active");
             randomBtn.classList.remove("active");
             customPanel.style.display = "block";
+            
+            // Scroll to custom section with highlight
+            setTimeout(() => {
+                smoothScrollToElement(customSection, 'highlight');
+            }, 100);
+            
             if (customWords.length === 0) customWords = ["apple", "beautiful"];
             currentWord = customWords[0];
             refreshDisplay();
-            feedbackText.innerHTML = "Custom mode! Add your words below.";
+            feedbackText.innerHTML = "✨ Custom mode! Add your own words below, then click 'Start Practice' to begin.";
         }
     }
     
@@ -653,7 +674,8 @@
         customWords.push(newWord);
         updateCustomBadges();
         input.value = "";
-        feedbackText.innerHTML = `✅ Added "${newWord}"`;
+        feedbackText.innerHTML = `✅ Added "${newWord}" to your word bank!`;
+        speak(`Added ${newWord}`, true);
     }
     
     function importWords() {
@@ -669,30 +691,42 @@
             refreshDisplay();
         }
         textarea.value = "";
-        feedbackText.innerHTML = `✅ Imported ${customWords.length} words!`;
+        feedbackText.innerHTML = `✅ Imported ${customWords.length} words! Click 'Start Practice' to begin.`;
+        speak(`Imported ${customWords.length} words`, true);
     }
     
     function startCustomPractice() {
         if (customWords.length === 0) {
-            feedbackText.innerHTML = "📝 Please add words first!";
+            feedbackText.innerHTML = "📝 Please add words to your word bank first!";
+            smoothScrollToElement(customSection, 'highlight');
             return;
         }
+        
         currentWord = customWords[Math.floor(Math.random() * customWords.length)];
         refreshDisplay();
-        document.querySelector('.practice-card').scrollIntoView({ behavior: 'smooth' });
+        
+        // Scroll to practice area
+        scrollToPracticeArea();
+        
         speak(currentWord, true);
-        feedbackText.innerHTML = `🎯 Practicing: "${currentWord}". Click Record & Check!`;
+        feedbackText.innerHTML = `🎯 Now practicing: "${currentWord}". Click 'Record & Check' to pronounce it!`;
     }
     
     function resetCustomList() {
-        customWords = ["apple", "beautiful", "challenge", "serendipity"];
+        customWords = ["apple", "beautiful", "challenge", "serendipity", "I appreciate it"];
         updateCustomBadges();
         if (currentMode === "custom") {
             currentWord = customWords[0];
             refreshDisplay();
         }
-        feedbackText.innerHTML = "🔄 Custom list reset!";
+        feedbackText.innerHTML = "🔄 Custom list reset to default words!";
+        speak("Custom list reset", true);
     }
+    
+    // Add highlight-practice style
+    const style = document.createElement('style');
+    style.textContent = `.highlight-practice { box-shadow: 0 0 0 3px #27ae60, 0 0 0 6px rgba(39,174,96,0.2); transition: all 0.3s ease; }`;
+    document.head.appendChild(style);
     
     // Event listeners
     document.querySelectorAll('.level-btn').forEach(btn => {
