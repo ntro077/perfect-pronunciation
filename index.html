@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>Perfect Pronunciation | AI Speech Coach with Level Adapt</title>
+    <title>Perfect Pronunciation | AI Speech Coach with Strict Scoring</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
@@ -264,6 +264,18 @@
             font-size: 1.3rem;
         }
 
+        .score-poor {
+            color: #e67e22;
+        }
+        
+        .score-good {
+            color: #27ae60;
+        }
+        
+        .score-excellent {
+            color: #2c7da0;
+        }
+
         .custom-section {
             margin-top: 1rem;
             background: #f8fafd;
@@ -413,7 +425,7 @@
         <h1>🗣️ Perfect Pronunciation</h1>
         <p>welcome to perfect your pronunciation — speak clearly, sound confident</p>
         <div class="voice-badge" style="margin-top: 12px; background: rgba(255,255,255,0.2); color:white;">
-            <i class="fas fa-head-side-vr"></i> calm voice guidance · real-time feedback
+            <i class="fas fa-head-side-vr"></i> calm voice guidance · strict pronunciation scoring
         </div>
     </div>
 
@@ -478,7 +490,7 @@
                 </div>
                 <div id="customWordBadges" style="margin-top: 1rem; display: flex; flex-wrap: wrap; gap: 8px;"></div>
                 <p class="suggestion-hint" style="margin-top: 15px; display: inline-block;">
-                    <i class="fas fa-lightbulb"></i> <strong>How it works:</strong> Add your own words, then click "Start Practice" to begin. The app will take you to the practice area where you can speak and check your pronunciation!
+                    <i class="fas fa-lightbulb"></i> <strong>How it works:</strong> Add your own words, then click "Start Practice" to begin. The app uses strict pronunciation scoring to help you improve!
                 </p>
             </div>
         </div>
@@ -541,6 +553,116 @@
         C1: "📖 C1: Advanced vocabulary & complex expressions",
         C2: "🔮 C2: Mastery level - sophisticated & nuanced language"
     };
+
+    // ========== STRICT PRONUNCIATION SCORING ==========
+    // This function is much stricter - penalizes:
+    // - Missing syllables
+    // - Different word lengths
+    // - Wrong sounds
+    function strictPronunciationScore(expected, spoken) {
+        if (!spoken || spoken.length === 0) return 0;
+        
+        // Normalize both strings
+        let normExpected = expected.toLowerCase().trim().replace(/[^\w\s]/g, '');
+        let normSpoken = spoken.toLowerCase().trim().replace(/[^\w\s]/g, '');
+        
+        // Exact match gets 100%
+        if (normExpected === normSpoken) return 100;
+        
+        // Split into words for phrases
+        const expectedWords = normExpected.split(/\s+/);
+        const spokenWords = normSpoken.split(/\s+/);
+        
+        // Penalty for different number of words
+        let wordCountPenalty = 0;
+        if (expectedWords.length !== spokenWords.length) {
+            wordCountPenalty = Math.min(30, Math.abs(expectedWords.length - spokenWords.length) * 15);
+        }
+        
+        // Calculate character-level similarity with higher penalty
+        const maxLen = Math.max(normExpected.length, normSpoken.length);
+        const minLen = Math.min(normExpected.length, normSpoken.length);
+        
+        // Length difference penalty (if words are very different in length)
+        let lengthPenalty = 0;
+        if (Math.abs(normExpected.length - normSpoken.length) > 3) {
+            lengthPenalty = Math.min(25, Math.abs(normExpected.length - normSpoken.length) * 5);
+        }
+        
+        // Enhanced Levenshtein distance with character importance
+        const distance = levenshteinDistance(normExpected, normSpoken);
+        let similarityScore = ((maxLen - distance) / maxLen) * 100;
+        
+        // Additional strictness: check for syllable count approximation
+        const syllableCountExpected = estimateSyllables(normExpected);
+        const syllableCountSpoken = estimateSyllables(normSpoken);
+        let syllablePenalty = Math.abs(syllableCountExpected - syllableCountSpoken) * 8;
+        syllablePenalty = Math.min(20, syllablePenalty);
+        
+        // Final score calculation with all penalties
+        let finalScore = similarityScore - wordCountPenalty - lengthPenalty - syllablePenalty;
+        
+        // Ensure score is between 0 and 100
+        finalScore = Math.max(0, Math.min(100, Math.floor(finalScore)));
+        
+        // Additional check: if the spoken word is completely different (low similarity), cap at 50%
+        if (similarityScore < 40) {
+            finalScore = Math.min(finalScore, 45);
+        }
+        
+        return finalScore;
+    }
+    
+    // Levenshtein distance algorithm
+    function levenshteinDistance(a, b) {
+        const matrix = [];
+        for (let i = 0; i <= b.length; i++) {
+            matrix[i] = [i];
+        }
+        for (let j = 0; j <= a.length; j++) {
+            matrix[0][j] = j;
+        }
+        for (let i = 1; i <= b.length; i++) {
+            for (let j = 1; j <= a.length; j++) {
+                if (b.charAt(i - 1) === a.charAt(j - 1)) {
+                    matrix[i][j] = matrix[i - 1][j - 1];
+                } else {
+                    matrix[i][j] = Math.min(
+                        matrix[i - 1][j - 1] + 1,
+                        matrix[i][j - 1] + 1,
+                        matrix[i - 1][j] + 1
+                    );
+                }
+            }
+        }
+        return matrix[b.length][a.length];
+    }
+    
+    // Simple syllable estimation (for penalty)
+    function estimateSyllables(word) {
+        word = word.toLowerCase();
+        let count = 0;
+        let vowels = 'aeiou';
+        let isPrevVowel = false;
+        
+        for (let i = 0; i < word.length; i++) {
+            if (vowels.includes(word[i])) {
+                if (!isPrevVowel) {
+                    count++;
+                    isPrevVowel = true;
+                }
+            } else {
+                isPrevVowel = false;
+            }
+        }
+        
+        // Special handling for silent e at the end
+        if (word.endsWith('e')) {
+            count = Math.max(1, count - 1);
+        }
+        
+        return Math.max(1, count);
+    }
 
     function smoothScrollToElement(element, highlightClass = 'highlight') {
         element.scrollIntoView({
@@ -718,45 +840,14 @@
             return;
         }
         
-        // Pick a random word from custom list
         currentPracticeWord = customWordsList[Math.floor(Math.random() * customWordsList.length)];
         refreshDisplay();
-        
-        // Scroll to practice area with highlight
         scrollToPracticeArea();
-        
-        // Speak the word and update feedback
         speakCalmly(`${currentPracticeWord}`, true);
         feedbackTextSpan.innerHTML = `<i class="fas fa-microphone-alt"></i> 🎯 Now practicing: "${currentPracticeWord}". Click 'Speak & Check' to pronounce it!`;
         scoreSpanDiv.innerHTML = "";
-        
-        // Add a little celebration effect
         currentPromptDisplay.classList.add('animate-word');
         setTimeout(() => currentPromptDisplay.classList.remove('animate-word'), 300);
-    }
-
-    function similarityScore(expected, spoken) {
-        if (!spoken) return 0;
-        let normExp = expected.toLowerCase().replace(/[^\w\s]/g, '');
-        let normSpoken = spoken.toLowerCase().replace(/[^\w\s]/g, '');
-        if (normExp === normSpoken) return 100;
-        
-        const len1 = normExp.length, len2 = normSpoken.length;
-        if (len1 === 0 || len2 === 0) return 0;
-        const matrix = Array(len2 + 1).fill().map(() => Array(len1 + 1).fill(0));
-        for (let i = 0; i <= len1; i++) matrix[0][i] = i;
-        for (let j = 0; j <= len2; j++) matrix[j][0] = j;
-        for (let j = 1; j <= len2; j++) {
-            for (let i = 1; i <= len1; i++) {
-                const cost = normExp[i-1] === normSpoken[j-1] ? 0 : 1;
-                matrix[j][i] = Math.min(matrix[j-1][i] + 1, matrix[j][i-1] + 1, matrix[j-1][i-1] + cost);
-            }
-        }
-        const distance = matrix[len2][len1];
-        const maxLen = Math.max(len1, len2);
-        let rawScore = ((maxLen - distance) / maxLen) * 100;
-        if (normSpoken.includes(normExp) || normExp.includes(normSpoken)) rawScore = Math.min(rawScore + 15, 100);
-        return Math.min(100, Math.max(0, Math.floor(rawScore)));
     }
 
     async function requestMicrophonePermission() {
@@ -829,21 +920,31 @@
         recognition.onresult = (event) => {
             let transcript = event.results[0][0].transcript.trim();
             let expected = currentPracticeWord;
-            let score = similarityScore(expected, transcript);
+            let score = strictPronunciationScore(expected, transcript);
             
             let feedbackMsg = `You said: "${transcript}". `;
+            let scoreClass = "";
+            
             if (score >= 85) {
-                feedbackMsg += `🌟 Excellent! Very close to perfect pronunciation. (${score}%)`;
-                speakCalmly(`Good job! ${expected}`, true);
-            } else if (score >= 65) {
-                feedbackMsg += `👍 Good attempt. Score: ${score}%. Keep practicing!`;
-                speakCalmly(`${expected}`, true);
+                feedbackMsg += `🌟 Excellent! Perfect pronunciation! (${score}%)`;
+                speakCalmly(`Excellent! ${expected}`, true);
+                scoreClass = "score-excellent";
+            } else if (score >= 70) {
+                feedbackMsg += `👍 Good effort. Score: ${score}%. Small improvements needed.`;
+                speakCalmly(`Almost there. ${expected}`, true);
+                scoreClass = "score-good";
+            } else if (score >= 50) {
+                feedbackMsg += `📢 Fair attempt. Score: ${score}%. Listen carefully and try again.`;
+                speakCalmly(`Try again. ${expected}`, true);
+                scoreClass = "score-poor";
             } else {
-                feedbackMsg += `📢 Let's practice more. Score: ${score}%. Listen to the correct pronunciation.`;
-                speakCalmly(`${expected}`, true);
+                feedbackMsg += `⚠️ Needs more practice. Score: ${score}%. Let's work on this one.`;
+                speakCalmly(`Let's practice. ${expected}`, true);
+                scoreClass = "score-poor";
             }
+            
             feedbackTextSpan.innerHTML = feedbackMsg;
-            scoreSpanDiv.innerHTML = `<span class="score">🎯 Pronunciation score: ${score}%</span>`;
+            scoreSpanDiv.innerHTML = `<span class="score ${scoreClass}">🎯 Pronunciation score: ${score}%</span>`;
             isListening = false;
             micBtn.classList.remove('mic-listening');
             micBtn.innerHTML = '<i class="fas fa-microphone"></i> Speak & Check';
@@ -959,7 +1060,7 @@
         setMode("random");
         
         setTimeout(() => {
-            speakCalmly("Welcome to Perfect Pronunciation", true);
+            speakCalmly("Welcome to Perfect Pronunciation. The app now uses strict scoring to help you improve.", true);
         }, 500);
     }
 
